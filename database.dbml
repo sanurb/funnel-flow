@@ -1,0 +1,313 @@
+Project SaaS_Funnel_Builder {
+  database_type: 'MySQL'
+  Note: '''
+    # SaaS Funnel Builder Database
+  '''
+}
+
+Enum Role {
+  AGENCY_OWNER
+  AGENCY_ADMIN
+  SUBACCOUNT_USER
+  SUBACCOUNT_GUEST
+}
+
+Enum Icon {
+  settings
+  chart
+  calendar
+  check
+  chip
+  compass
+  database
+  flag
+  home
+  info
+  link
+  lock
+  messages
+  notification
+  payment
+  power
+  receipt
+  shield
+  star
+  tune
+  videorecorder
+  wallet
+  warning
+  headphone
+  send
+  pipelines
+  person
+  category
+  contact
+  clipboardIcon
+}
+
+Enum TriggerTypes {
+  CONTACT_FORM
+}
+
+Enum ActionType {
+  CREATE_CONTACT
+}
+
+Enum InvitationStatus {
+  ACCEPTED
+  REVOKED
+  PENDING
+}
+
+Enum Plan {
+  price_1OYxkqFj9oKEERu1NbKUxXxN
+  price_1OYxkqFj9oKEERu1KfJGWxgN
+}
+
+Table User {
+  id varchar(36) [pk]
+  name varchar(255)
+  avatarUrl longtext
+  email varchar(255) [unique]
+  createdAt datetime
+  updatedAt datetime
+  role Role
+  agencyId varchar(36) [ref: > Agency.id]
+}
+
+Table Permissions {
+  id varchar(36) [pk]
+  email varchar(255)
+  subAccountId varchar(36) [ref: > SubAccount.id]
+  access boolean
+}
+
+Table Agency {
+  id varchar(36) [pk]
+  connectAccountId varchar(255)
+  customerId varchar(255)
+  name varchar(255)
+  agencyLogo longtext
+  companyEmail longtext
+  companyPhone varchar(255)
+  whiteLabel boolean
+  address varchar(255)
+  city varchar(255)
+  zipCode varchar(255)
+  state varchar(255)
+  country varchar(255)
+  goal int
+  createdAt datetime
+  updatedAt datetime
+}
+
+Table SubAccount {
+  id varchar(36) [pk]
+  connectAccountId varchar(255)
+  name varchar(255)
+  subAccountLogo longtext
+  createdAt datetime
+  updatedAt datetime
+  companyEmail longtext
+  companyPhone varchar(255)
+  goal int
+  address varchar(255)
+  city varchar(255)
+  zipCode varchar(255)
+  state varchar(255)
+  country varchar(255)
+  agencyId varchar(36) [ref: > Agency.id]
+}
+
+Table Tag {
+  id varchar(36) [pk]
+  name varchar(255)
+  color varchar(255)
+  createdAt datetime
+  updatedAt datetime
+  subAccountId varchar(36) [ref: > SubAccount.id]
+}
+
+Table Pipeline {
+  id varchar(36) [pk]
+  name varchar(255)
+  createdAt datetime
+  updatedAt datetime
+  subAccountId varchar(36) [ref: > SubAccount.id]
+}
+
+Table Lane {
+  id varchar(36) [pk]
+  name varchar(255)
+  createdAt datetime
+  updatedAt datetime
+  pipelineId varchar(36) [ref: > Pipeline.id]
+  order int
+}
+
+Table Ticket {
+  id varchar(36) [pk]
+  name varchar(255)
+  createdAt datetime
+  updatedAt datetime
+  laneId varchar(36) [ref: > Lane.id]
+  order int
+  value decimal(10,2)
+  description text
+  customerId varchar(36) [ref: > Contact.id]
+  assignedUserId varchar(36) [ref: > User.id]
+}
+
+Table Trigger {
+  id varchar(36) [pk]
+  name varchar(255)
+  type TriggerTypes
+  createdAt datetime
+  updatedAt datetime
+  subAccountId varchar(36) [ref: > SubAccount.id]
+}
+
+Table Automation {
+  id varchar(36) [pk]
+  name varchar(255)
+  createdAt datetime
+  updatedAt datetime
+  triggerId varchar(36) [ref: > Trigger.id]
+  published boolean
+  subAccountId varchar(36) [ref: > SubAccount.id]
+}
+
+Table AutomationInstance {
+  id varchar(36) [pk]
+  createdAt datetime
+  updatedAt datetime
+  automationId varchar(36) [ref: > Automation.id]
+  active boolean
+}
+
+Table Action {
+  id varchar(36) [pk]
+  name varchar(255)
+  type ActionType
+  createdAt datetime
+  updatedAt datetime
+  automationId varchar(36) [ref: > Automation.id]
+  order int
+  laneId varchar(36)
+}
+
+Table Contact {
+  id varchar(36) [pk]
+  name varchar(255)
+  email varchar(255)
+  createdAt datetime
+  updatedAt datetime
+  subAccountId varchar(36) [ref: > SubAccount.id]
+}
+
+Table Media {
+  id varchar(36) [pk]
+  type varchar(255)
+  name varchar(255)
+  link varchar(255) [unique]
+  subAccountId varchar(36) [ref: > SubAccount.id]
+  createdAt datetime
+  updatedAt datetime
+}
+
+Table Funnel {
+  id varchar(36) [pk]
+  name varchar(255)
+  createdAt datetime
+  updatedAt datetime
+  description text
+  published boolean
+  subDomainName varchar(255) [unique]
+  favicon text
+  subAccountId varchar(36) [ref: > SubAccount.id]
+}
+
+Table ClassName {
+  id varchar(36) [pk]
+  name varchar(255)
+  color varchar(255)
+  createdAt datetime
+  updatedAt datetime
+  funnelId varchar(36) [ref: > Funnel.id]
+  customData longtext
+}
+
+Table FunnelPage {
+  id varchar(36) [pk]
+  name varchar(255)
+  pathName varchar(255)
+  createdAt datetime
+  updatedAt datetime
+  visits int
+  content longtext
+  order int
+  previewImage text
+  funnelId varchar(36) [ref: > Funnel.id]
+}
+
+Table AgencySidebarOption {
+  id varchar(36) [pk]
+  name varchar(255)
+  link varchar(255)
+  icon Icon
+  agencyId varchar(36) [ref: > Agency.id]
+  createdAt datetime
+  updatedAt datetime
+}
+
+Table SubAccountSidebarOption {
+  id varchar(36) [pk]
+  name varchar(255)
+  link varchar(255)
+  icon Icon
+  subAccountId varchar(36) [ref: > SubAccount.id]
+  createdAt datetime
+  updatedAt datetime
+}
+
+Table Invitation {
+  id varchar(36) [pk]
+  email varchar(255) [unique]
+  agencyId varchar(36) [ref: > Agency.id]
+  status InvitationStatus
+  role Role
+}
+
+Table Notification {
+  id varchar(36) [pk]
+  notification text
+  agencyId varchar(36) [ref: > Agency.id]
+  subAccountId varchar(36) [ref: > SubAccount.id]
+  userId varchar(36) [ref: > User.id]
+  createdAt datetime
+  updatedAt datetime
+}
+
+Table Subscription {
+  id varchar(36) [pk]
+  createdAt datetime
+  updatedAt datetime
+  plan Plan
+  price varchar(255)
+  active boolean
+  priceId varchar(255)
+  customerId varchar(255)
+  currentPeriodEndDate datetime
+  subscritiptionId varchar(255) [unique]
+  agencyId varchar(36) [ref: > Agency.id]
+}
+
+Table AddOns {
+  id varchar(36) [pk]
+  createdAt datetime
+  updatedAt datetime
+  name varchar(255)
+  active boolean
+  priceId varchar(255) [unique]
+  agencyId varchar(36) [ref: > Agency.id]
+}
