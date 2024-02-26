@@ -1,6 +1,7 @@
 'use client'
 
 import { icons } from '@/lib/constants'
+import { useModal } from '@/providers/modal-provider'
 import {
   Agency,
   AgencySidebarOption,
@@ -11,7 +12,9 @@ import clsx from 'clsx'
 import { ChevronsUpDown, Compass, Menu, PlusCircleIcon } from 'lucide-react'
 import Image from 'next/image'
 import Link from 'next/link'
-import React, { useEffect, useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
+import SubAccountDetails from '../forms/subaccount-details'
+import CustomModal from '../global/custom-modal'
 import { AspectRatio } from '../ui/aspect-ratio'
 import { Button } from '../ui/button'
 import {
@@ -45,6 +48,7 @@ const MenuOptions = ({
   user,
   defaultOpen,
 }: Props) => {
+  const { setOpen } = useModal()
   const [isMounted, setIsMounted] = useState(false)
 
   const openState = useMemo(
@@ -232,7 +236,18 @@ const MenuOptions = ({
                     <Button
                       className="w-full flex gap-2"
                       onClick={() => {
-
+                        setOpen(
+                          <CustomModal
+                            title="Create A Subaccount"
+                            subheading="You can switch between your agency account and the subaccount from the sidebar"
+                          >
+                            <SubAccountDetails
+                              agencyDetails={user?.Agency as Agency}
+                              userId={user?.id as string}
+                              userName={user?.name}
+                            />
+                          </CustomModal>
+                        )
                       }}
                     >
                       <PlusCircleIcon size={15} />
