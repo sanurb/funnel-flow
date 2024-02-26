@@ -122,7 +122,7 @@ const MenuOptions = ({
                 </div>
               </Button>
             </PopoverTrigger>
-            <PopoverContent className="w-80 h-80 mt-4 z-[200]">
+            <PopoverContent className="w-80 h-80 mt-4 z-[200] whitespace-nowrap	">
               <Command className="rounded-lg">
                 <CommandInput placeholder="Search Accounts..." />
                 <CommandList className="pb-16">
