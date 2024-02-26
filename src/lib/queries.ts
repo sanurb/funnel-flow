@@ -321,3 +321,23 @@ export const upsertAgency = async (agency: Agency, price?: Plan) => {
     console.log(error)
   }
 }
+
+/**
+ * Retrieves notifications and associated users for a given agency.
+ * @param agencyId - The ID of the agency.
+ * @returns A Promise that resolves to an array of notifications and associated users.
+ */
+export const getNotificationAndUser = async (agencyId: string) => {
+  try {
+    const response = await db.notification.findMany({
+      where: { agencyId },
+      include: { User: true },
+      orderBy: {
+        createdAt: 'desc',
+      },
+    })
+    return response
+  } catch (error) {
+    console.log(error)
+  }
+}
