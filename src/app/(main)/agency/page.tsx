@@ -33,9 +33,10 @@ const Page = async ({
   }
   const authUser = await currentUser()
   return (
-    <div className="flex justify-center items-center mt-4">
-      <div className="max-w-[850px] border-[1px] p-4 rounded-xl">
+    <div className="flex flex-col items-center w-full min-w-0 min-h-lg pt-3">
+      <div className="flex flex-col flex-grow w-full first:mt-0 last:mb-0 max-w-[850px] border-[1px] p-4 rounded-xl">
         <h1 className="text-4xl"> Create An Agency</h1>
+        <hr className="my-4 w-full border-t" />
         <AgencyDetails
           data={{ companyEmail: authUser?.emailAddresses[0].emailAddress }}
         />
