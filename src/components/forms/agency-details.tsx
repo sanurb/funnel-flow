@@ -388,19 +388,14 @@ const AgencyDetails = ({ data }: Props) => {
 
 
           {data?.id && (
-            <div className="flex flex-row items-center justify-between rounded-lg border border-destructive gap-4 p-4 mt-4">
-              <div>
-                <div>Danger Zone</div>
-              </div>
-              <div className="text-muted-foreground">
-                Deleting your agency cannpt be undone. This will also delete all
-                sub accounts and all data related to your sub accounts. Sub
-                accounts will no longer have access to funnels, contacts etc.
-              </div>
+            <div className="flex flex-row items-center justify-between rounded-lg border border-destructive gap-4 p-4 mt-4 whitespace-nowrap h-[34px] px-3 hover:bg-red-100" style={{ width: 'fit-content' }}>
               <AlertDialogTrigger
                 disabled={isLoading || deletingAgency}
-                className="text-red-600 p-2 text-center mt-2 rounded-md hove:bg-red-600 hover:text-white whitespace-nowrap"
+                className="text-red-600 p-2 text-center rounded-md hove:bg-red-600 whitespace-nowrap flex space-x-3 items-center"
               >
+
+                <div className="icon-container icon-md text-red-500 stroke-0" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M15.2023 16.1859L18.3333 12.537L14.3751 13.125L15.6785 7.2476L12.0166 10.8486L9.99996 2.5L7.98329 10.8486L4.32139 7.2476L5.62506 13.125L1.66663 12.537L4.79758 16.1859M8.04758 16.6667L9.49988 15L9.99988 13.5L10.4999 15L11.9523 16.6667" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path></svg></div>
+
                 {deletingAgency ? 'Deleting...' : 'Delete Agency'}
               </AlertDialogTrigger>
             </div>
