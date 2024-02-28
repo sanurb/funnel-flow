@@ -393,10 +393,11 @@ const AgencyDetails = ({ data }: Props) => {
                 disabled={isLoading || deletingAgency}
                 className="text-red-600 p-2 text-center rounded-md hove:bg-red-600 whitespace-nowrap flex space-x-3 items-center"
               >
+                <div className="flex space-x-3 items-center gap-1.5">
+                  <div className="icon-container icon-md text-red-500 stroke-0" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M15.2023 16.1859L18.3333 12.537L14.3751 13.125L15.6785 7.2476L12.0166 10.8486L9.99996 2.5L7.98329 10.8486L4.32139 7.2476L5.62506 13.125L1.66663 12.537L4.79758 16.1859M8.04758 16.6667L9.49988 15L9.99988 13.5L10.4999 15L11.9523 16.6667" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path></svg></div>
 
-                <div className="icon-container icon-md text-red-500 stroke-0" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M15.2023 16.1859L18.3333 12.537L14.3751 13.125L15.6785 7.2476L12.0166 10.8486L9.99996 2.5L7.98329 10.8486L4.32139 7.2476L5.62506 13.125L1.66663 12.537L4.79758 16.1859M8.04758 16.6667L9.49988 15L9.99988 13.5L10.4999 15L11.9523 16.6667" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path></svg></div>
-
-                {deletingAgency ? 'Deleting...' : 'Delete Agency'}
+                  {deletingAgency ? 'Deleting...' : 'Delete Agency'}
+                </div>
               </AlertDialogTrigger>
             </div>
           )}
@@ -410,14 +411,14 @@ const AgencyDetails = ({ data }: Props) => {
                 Agency account and all related sub accounts.
               </AlertDialogDescription>
             </AlertDialogHeader>
-            <AlertDialogFooter className="flex items-center">
+            <AlertDialogFooter className="flex items-baseline">
               <AlertDialogCancel className="mb-2">Cancel</AlertDialogCancel>
               <AlertDialogAction
                 disabled={deletingAgency}
                 className="bg-destructive hover:bg-destructive"
                 onClick={handleDeleteAgency}
               >
-                Delete
+                Yes, Delete Agency Forever
               </AlertDialogAction>
             </AlertDialogFooter>
           </AlertDialogContent>
