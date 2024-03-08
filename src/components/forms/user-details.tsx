@@ -298,7 +298,7 @@ const UserDetails = ({ id, type, subAccounts, userData }: Props) => {
                       </SelectTrigger>
                     </FormControl>
                     <SelectContent>
-                      <SelectItem value="AGENCY_ADMING">
+                      <SelectItem value="AGENCY_ADMIN">
                         Agency Admin
                       </SelectItem>
                       {(data?.user?.role === "AGENCY_OWNER" ||
