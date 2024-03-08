@@ -1,36 +1,28 @@
 "use client";
+import { deleteAgency, initUser, saveActivityLogsNotification, updateAgencyDetails, upsertAgency } from "@/lib/queries";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Agency } from "@prisma/client";
 import { NumberInput } from '@tremor/react';
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
+import { v4 } from 'uuid';
 import * as z from "zod";
 import FileUpload from "../global/file-upload";
 import Loading from '../global/loading';
-import { v4 } from 'uuid';
-import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "../ui/alert-dialog";
-import { Button } from "../ui/button";
 import {
-    Card,
-    CardContent,
-    CardDescription,
-    CardHeader,
-    CardTitle,
-} from "../ui/card";
-import {
-    Form,
-    FormControl,
-    FormDescription,
-    FormField,
-    FormItem,
-    FormLabel,
-    FormMessage,
-} from "../ui/form";
-import { Input } from "../ui/input";
-import { Switch } from "../ui/switch";
-import { useToast } from "../ui/use-toast";
-import { deleteAgency, initUser, saveActivityLogsNotification, updateAgencyDetails, upsertAgency } from "@/lib/queries";
+  AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger, Button, Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle, Form,
+  FormControl,
+  FormDescription,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage, Input, Switch, useToast
+} from "../ui";
 
 
 type Props = {
@@ -388,20 +380,16 @@ const AgencyDetails = ({ data }: Props) => {
 
 
           {data?.id && (
-            <div className="flex flex-row items-center justify-between rounded-lg border border-destructive gap-4 p-4 mt-4">
-              <div>
-                <div>Danger Zone</div>
-              </div>
-              <div className="text-muted-foreground">
-                Deleting your agency cannpt be undone. This will also delete all
-                sub accounts and all data related to your sub accounts. Sub
-                accounts will no longer have access to funnels, contacts etc.
-              </div>
+            <div className="flex flex-row items-center justify-between rounded-lg border border-destructive gap-4 p-4 mt-4 whitespace-nowrap h-[34px] px-3 hover:bg-red-100" style={{ width: 'fit-content' }}>
               <AlertDialogTrigger
                 disabled={isLoading || deletingAgency}
-                className="text-red-600 p-2 text-center mt-2 rounded-md hove:bg-red-600 hover:text-white whitespace-nowrap"
+                className="text-red-600 p-2 text-center rounded-md hove:bg-red-600 whitespace-nowrap flex space-x-3 items-center"
               >
-                {deletingAgency ? 'Deleting...' : 'Delete Agency'}
+                <div className="flex space-x-3 items-center gap-1.5">
+                  <div className="icon-container icon-md text-red-500 stroke-0" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M15.2023 16.1859L18.3333 12.537L14.3751 13.125L15.6785 7.2476L12.0166 10.8486L9.99996 2.5L7.98329 10.8486L4.32139 7.2476L5.62506 13.125L1.66663 12.537L4.79758 16.1859M8.04758 16.6667L9.49988 15L9.99988 13.5L10.4999 15L11.9523 16.6667" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path></svg></div>
+
+                  {deletingAgency ? 'Deleting...' : 'Delete Agency'}
+                </div>
               </AlertDialogTrigger>
             </div>
           )}
@@ -415,14 +403,14 @@ const AgencyDetails = ({ data }: Props) => {
                 Agency account and all related sub accounts.
               </AlertDialogDescription>
             </AlertDialogHeader>
-            <AlertDialogFooter className="flex items-center">
+            <AlertDialogFooter className="flex items-baseline">
               <AlertDialogCancel className="mb-2">Cancel</AlertDialogCancel>
               <AlertDialogAction
                 disabled={deletingAgency}
                 className="bg-destructive hover:bg-destructive"
                 onClick={handleDeleteAgency}
               >
-                Delete
+                Yes, Delete Agency Forever
               </AlertDialogAction>
             </AlertDialogFooter>
           </AlertDialogContent>

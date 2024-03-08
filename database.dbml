@@ -2,6 +2,71 @@ Project SaaS_Funnel_Builder {
   database_type: 'MySQL'
   Note: '''
     # SaaS Funnel Builder Database
+
+    This database is designed to support a SaaS application focused on building and managing sales funnels. 
+    It contains information related to users, agencies, subaccounts, and various elements related to sales funnels like pipelines, tickets, and automation.
+
+    ## Core Tables and Design Rationale
+
+    ### `User`
+
+    - **Purpose**: Manages user information and roles.
+    - **Design Rationale**: Users can have different roles (AGENCY_OWNER, AGENCY_ADMIN, etc.), which determine their access levels and capabilities within the system. Linking users to agencies enables multi-tenancy support.
+
+    ### `Permissions`
+
+    - **Purpose**: Defines access levels for users within subaccounts.
+    - **Design Rationale**: Enables granular access control, ensuring users only access data pertinent to their role and permissions.
+
+    ### `Agency`
+
+    - **Purpose**: Stores information about marketing agencies.
+    - **Design Rationale**: Central to the multi-tenant architecture, allowing multiple agencies to operate within the same platform while maintaining separation of data.
+
+    ### `SubAccount`
+
+    - **Purpose**: Represents clients or projects under an agency.
+    - **Design Rationale**: Allows agencies to manage multiple clients or projects, each with its unique settings and data, under a single agency umbrella.
+
+    ### `Tag`
+
+    - **Purpose**: Enables tagging of different entities for organization and filtering.
+    - **Design Rationale**: Adds flexibility in managing and categorizing records, such as contacts or tickets, within subaccounts.
+
+    ### `Pipeline`, `Lane`, and `Ticket`
+
+    - **Purpose**: These tables are core to the funnel management system, representing the stages (Lanes) and individual items (Tickets) in a sales or project Pipeline.
+    - **Design Rationale**: Reflects the workflow of sales funnels, where tickets move through various stages, allowing for tracking of progress and efficiency.
+
+    ### `Trigger` and `Automation`
+
+    - **Purpose**: Facilitate automated actions based on specific conditions.
+    - **Design Rationale**: Enhances efficiency by automating routine tasks, such as contact creation, based on predefined triggers.
+
+    ### `Contact`
+
+    - **Purpose**: Manages customer or lead information.
+    - **Design Rationale**: Essential for tracking interactions and progress within sales funnels.
+
+    ### `Funnel`
+
+    - **Purpose**: Represents a complete sales or marketing funnel.
+    - **Design Rationale**: Allows for the creation and management of multiple, distinct funnels, each with its stages, pages, and metrics.
+
+    ### `Media`, `FunnelPage`, and `ClassName`
+
+    - **Purpose**: Support content management within funnels, including media files, web pages, and CSS customization.
+    - **Design Rationale**: Provides flexibility and customization for users to design and deploy tailored funnel experiences.
+
+    ### `AgencySidebarOption` and `SubAccountSidebarOption`
+
+    - **Purpose**: Customizes the navigation options available to different users.
+    - **Design Rationale**: Enhances user experience by allowing agencies and subaccounts to tailor the platform's interface to their needs.
+
+    ### `Invitation`, `Notification`, and `Subscription`
+
+    - **Purpose**: These tables support user collaboration, communication, and subscription management.
+    - **Design Rationale**: Facilitates user engagement, system alerts, and management of service plans, crucial for a SaaS platform's operation and scalability.
   '''
 }
 
@@ -134,6 +199,7 @@ Table Pipeline {
   createdAt datetime
   updatedAt datetime
   subAccountId varchar(36) [ref: > SubAccount.id]
+  Note: 'Defines a series of stages (lanes) to track the progress of sales or projects.'
 }
 
 Table Lane {
@@ -143,6 +209,8 @@ Table Lane {
   updatedAt datetime
   pipelineId varchar(36) [ref: > Pipeline.id]
   order int
+  Note: 'Defines a series of stages (lanes) to track the progress of sales or projects.'
+
 }
 
 Table Ticket {
@@ -156,6 +224,7 @@ Table Ticket {
   description text
   customerId varchar(36) [ref: > Contact.id]
   assignedUserId varchar(36) [ref: > User.id]
+  Note: 'Tracks individual items, such as customer inquiries or tasks, moving through the pipeline.'
 }
 
 Table Trigger {
@@ -165,6 +234,7 @@ Table Trigger {
   createdAt datetime
   updatedAt datetime
   subAccountId varchar(36) [ref: > SubAccount.id]
+  Note: 'Defines a condition or event that initiates an automation within the system.'
 }
 
 Table Automation {
@@ -175,6 +245,7 @@ Table Automation {
   triggerId varchar(36) [ref: > Trigger.id]
   published boolean
   subAccountId varchar(36) [ref: > SubAccount.id]
+  Note: 'Represents a set of actions to be performed automatically when a trigger is activated.'
 }
 
 Table AutomationInstance {
@@ -225,6 +296,7 @@ Table Funnel {
   subDomainName varchar(255) [unique]
   favicon text
   subAccountId varchar(36) [ref: > SubAccount.id]
+  Note: 'Represents a sales or marketing funnel, which is a multi-step process designed to guide potential customers towards a purchase.'
 }
 
 Table ClassName {
@@ -300,6 +372,7 @@ Table Subscription {
   currentPeriodEndDate datetime
   subscritiptionId varchar(255) [unique]
   agencyId varchar(36) [ref: > Agency.id]
+  Note: 'Manages subscription information for agencies, including the plan and status.'
 }
 
 Table AddOns {

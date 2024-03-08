@@ -45,10 +45,6 @@ const formSchema = z.object({
   country: z.string(),
 })
 
-//CHALLENGE Give access for Subaccount Guest they should see a different view maybe a form that allows them to create tickets
-
-//CHALLENGE layout.tsx oonly runs once as a result if you remove permissions for someone and they keep navigating the layout.tsx wont fire again. solution- save the data inside metadata for current user.
-
 interface SubAccountDetailsProps {
   agencyDetails: Agency
   details?: Partial<SubAccount>
@@ -129,7 +125,6 @@ const SubAccountDetails: React.FC<SubAccountDetailsProps> = ({
   }, [details])
 
   const isLoading = form.formState.isSubmitting
-  //CHALLENGE Create this form.
   return (
     <Card className="w-full">
       <CardHeader>
