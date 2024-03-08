@@ -1,0 +1,43 @@
+# Use root/example as user/password credentials
+version: '3.1'
+
+services:
+
+  db:
+    image: mariadb
+    container_name: mysql_server_funnelFlow
+    restart: always
+    ports:
+      - 3362:3306
+    
+    command: --init-file /data/application/init.sql
+    volumes:
+        - ./init.sql:/data/application/init.sql
+    
+    environment:
+      MARIADB_ALLOW_EMPTY_ROOT_PASSWORD: 1
+    
+
+
+  web:
+    image: node:lts
+    container_name: web_app_funnelFlow
+    restart: always
+
+    network_mode: "host"
+
+    volumes:
+    - ./:/var/funnel-flow/
+    #- type: volume
+     # source: dd
+      #target: /app
+      #volume:
+       # nocopy: true 
+    working_dir: /var/funnel-flow/
+    command: bash -c "npm install && npx prisma generate && npx prisma db push && npm run dev"
+  
+ # adminer:
+  #  image: adminer
+   # restart: always
+    #ports:
+     # - 8080:8080
