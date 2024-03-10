@@ -21,7 +21,7 @@ const AllSubaccountsPage = async (props: Props) => {
       <div className="flex flex-col ">
         <Command className="rounded-lg bg-transparent">
           <CommandInput placeholder="Search Account..." />
-          <CommandList>
+          <CommandList style={{ maxHeight: 'fit-content' }}>
             <CommandEmpty>No Results Found.</CommandEmpty>
             <CommandGroup heading="Sub Accounts">
               {!!user.Agency?.SubAccount.length ? (
