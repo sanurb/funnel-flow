@@ -491,3 +491,31 @@ export const changeUserPermissions = async (
     console.log('🔴Could not change persmission', error)
   }
 }
+
+/**
+ * Retrieves the details of a subaccount.
+ * @param subaccountId - The ID of the subaccount to retrieve details for.
+ * @returns A Promise that resolves to the response containing the subaccount details.
+ */
+export const getSubaccountDetails = async (subaccountId: string) => {
+  const response = await db.subAccount.findUnique({
+    where: {
+      id: subaccountId,
+    },
+  })
+  return response
+}
+
+/**
+ * Deletes a subaccount from the database.
+ * @param subaccountId - The ID of the subaccount to delete.
+ * @returns A Promise that resolves to the response from the database.
+ */
+export const deleteSubAccount = async (subaccountId: string) => {
+  const response = await db.subAccount.delete({
+    where: {
+      id: subaccountId,
+    },
+  })
+  return response
+}

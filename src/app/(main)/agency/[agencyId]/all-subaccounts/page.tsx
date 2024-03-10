@@ -1,5 +1,5 @@
-import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from '@/components/ui/alert-dialog'
 import { AlertDescription } from '@/components/ui/alert'
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from '@/components/ui/alert-dialog'
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from '@/components/ui/command'
 import { getAuthUserDetails } from '@/lib/queries'
 import Image from 'next/image'
@@ -7,6 +7,7 @@ import Link from 'next/link'
 
 import { Button } from '@/components/ui/button'
 import { SubAccount } from '@prisma/client'
+import DeleteButton from './_components/delete-button'
 
 type Props = {
     params: { agencyId: string }
@@ -75,7 +76,7 @@ const AllSubaccountsPage = async (props: Props) => {
                           Cancel
                         </AlertDialogCancel>
                         <AlertDialogAction className="bg-destructive hover:bg-destructive">
-                          {/* <DeleteButton subaccountId={subaccount.id} /> */}
+                          <DeleteButton subaccountId={subaccount.id} />
                         </AlertDialogAction>
                       </AlertDialogFooter>
                     </AlertDialogContent>
