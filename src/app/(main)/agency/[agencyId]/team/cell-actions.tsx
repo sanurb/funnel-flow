@@ -7,9 +7,8 @@ import {
   AlertDialogContent,
   AlertDialogDescription,
   AlertDialogFooter,
-  AlertDialogHeader,
   AlertDialogTitle,
-  AlertDialogTrigger,
+  AlertDialogTrigger
 } from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
 import {
@@ -24,7 +23,7 @@ import { useToast } from "@/components/ui/use-toast";
 import { deleteUser } from "@/lib/queries";
 import { UsersWithAgencySubAccountPermissionsSidebarOptions } from "@/lib/types";
 import { useModal } from "@/providers/modal-provider";
-import { Copy, Edit, MoreHorizontal, Trash } from "lucide-react";
+import { Check, Copy, Edit, MoreHorizontal, Trash } from "lucide-react";
 import { useRouter } from "next/navigation";
 import React, { useState } from "react";
 
@@ -36,16 +35,21 @@ const CellActions: React.FC<CellActionsProps> = ({ rowData }) => {
   const { setOpen } = useModal();
   const { toast } = useToast();
   const [loading, setLoading] = useState(false);
+  const [isCopied, setIsCopied] = useState(false);
   const router = useRouter();
 
   if (!rowData || !rowData.Agency) return null;
 
   const handleCopyEmail = async () => {
     await navigator.clipboard.writeText(rowData.email);
+    setIsCopied(true);
     toast({
       title: "Email Copied",
       description: "User email address has been copied to clipboard",
     });
+    setTimeout(() => {
+      setIsCopied(false);
+    }, 2000);
   };
 
 const handleEditDetails = async () => {
@@ -87,8 +91,9 @@ const handleEditDetails = async () => {
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end">
           <DropdownMenuLabel>Actions</DropdownMenuLabel>
-          <DropdownMenuItem className="flex gap-2" onSelect={handleCopyEmail}>
-            <Copy size={15} /> Copy Email
+          <DropdownMenuItem className="flex gap-2 items-center" onSelect={handleCopyEmail}>
+            {isCopied ? <Check size={15} className="transition-all duration-500 ease-in-out" /> : <Copy size={15} className="transition-all duration-500 ease-in-out" />}
+            {isCopied ? 'Copied' : 'Copy Email'}
           </DropdownMenuItem>
           <DropdownMenuSeparator />
           <DropdownMenuItem className="flex gap-2" onSelect={handleEditDetails}>
