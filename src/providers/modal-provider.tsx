@@ -7,7 +7,7 @@ interface ModalProviderProps {
     children: React.ReactNode;
   }
   
-  type ModalData = {
+  export type ModalData = {
     user?: User;
     agency?: Agency;
   };
