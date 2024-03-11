@@ -1,28 +1,50 @@
-import { AlertDescription } from '@/components/ui/alert'
-import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from '@/components/ui/alert-dialog'
-import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from '@/components/ui/command'
-import { getAuthUserDetails } from '@/lib/queries'
-import Image from 'next/image'
-import Link from 'next/link'
+import { AlertDescription } from "@/components/ui/alert";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
+import {
+  Command,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+  CommandList,
+} from "@/components/ui/command";
+import { getAuthUserDetails } from "@/lib/queries";
+import Image from "next/image";
+import Link from "next/link";
 
-import { Button } from '@/components/ui/button'
-import { SubAccount } from '@prisma/client'
-import DeleteButton from './_components/delete-button'
+import { Button } from "@/components/ui/button";
+import { SubAccount } from "@prisma/client";
+import DeleteButton from "./_components/delete-button";
+import CreateSubaccountButton from "./_components/create-subaccount-btn";
 
 type Props = {
-    params: { agencyId: string }
-}
+  params: { agencyId: string };
+};
 
-const AllSubaccountsPage = async (props: Props) => {
-  const user = await getAuthUserDetails()
-  if (!user) return
+const AllSubaccountsPage = async ({ params }: Props) => {
+  const user = await getAuthUserDetails();
+  if (!user) return;
 
   return (
     <AlertDialog>
       <div className="flex flex-col ">
+        <CreateSubaccountButton
+          user={user}
+          id={params.agencyId}
+          className="w-[200px] self-end m-6"
+        />
         <Command className="rounded-lg bg-transparent">
           <CommandInput placeholder="Search Account..." />
-          <CommandList style={{ maxHeight: 'fit-content' }}>
+          <CommandList style={{ maxHeight: "fit-content" }}>
             <CommandEmpty>No Results Found.</CommandEmpty>
             <CommandGroup heading="Sub Accounts">
               {!!user.Agency?.SubAccount.length ? (
@@ -54,8 +76,8 @@ const AllSubaccountsPage = async (props: Props) => {
                     </Link>
                     <AlertDialogTrigger asChild>
                       <Button
-                        size={'sm'}
-                        variant={'destructive'}
+                        size={"sm"}
+                        variant={"destructive"}
                         className="w-20 hover:bg-red-600 hover:text-white !text-white"
                       >
                         Delete
@@ -92,7 +114,7 @@ const AllSubaccountsPage = async (props: Props) => {
         </Command>
       </div>
     </AlertDialog>
-  )
-}
+  );
+};
 
-export default AllSubaccountsPage
+export default AllSubaccountsPage;

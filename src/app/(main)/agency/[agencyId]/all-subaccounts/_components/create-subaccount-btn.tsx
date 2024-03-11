@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button'
 import { useModal } from '@/providers/modal-provider'
 import { Agency, AgencySidebarOption, SubAccount, User } from '@prisma/client'
 import { PlusCircleIcon } from 'lucide-react'
-import React from 'react'
+import { useCallback } from 'react'
 import { twMerge } from 'tailwind-merge'
 
 type Props = {
@@ -27,31 +27,34 @@ type Props = {
 const CreateSubaccountButton = ({ className, id, user }: Props) => {
   const { setOpen } = useModal()
   const agencyDetails = user.Agency
+  const handleButtonClick = useCallback(() => {
+    if (!agencyDetails) return;
+  
+    setOpen(
+      <CustomModal
+        title="Create a Subaccount"
+        subheading="You can switch between"
+      >
+        <SubAccountDetails
+          agencyDetails={agencyDetails}
+          userId={user.id}
+          userName={user.name}
+        />
+      </CustomModal>
+    );
+  }, [setOpen, agencyDetails, user.id, user.name]);
 
-  if (!agencyDetails) return
+  if (!agencyDetails) return null;
 
   return (
     <Button
       className={twMerge('w-full flex gap-4', className)}
-      onClick={() => {
-        setOpen(
-          <CustomModal
-            title="Create a Subaccount"
-            subheading="You can switch bettween"
-          >
-            <SubAccountDetails
-              agencyDetails={agencyDetails}
-              userId={user.id}
-              userName={user.name}
-            />
-          </CustomModal>
-        )
-      }}
+      onClick={handleButtonClick}
     >
       <PlusCircleIcon size={15} />
       Create Sub Account
     </Button>
-  )
+  );
 }
 
 export default CreateSubaccountButton
