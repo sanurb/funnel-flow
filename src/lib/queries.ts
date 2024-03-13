@@ -1,17 +1,19 @@
 "use server";
 
 import { clerkClient, currentUser } from "@clerk/nextjs";
-import { db } from "./db";
-import { redirect } from "next/navigation";
 import { Agency, Plan, Role, SubAccount, User } from "@prisma/client";
+import { redirect } from "next/navigation";
 import { v4 } from "uuid";
+import { db } from "./db";
+import { withRetry } from "./utils";
+
 
 /**
- * Retrieves the details of the authenticated user.
- * @returns {Promise<UserData | undefined>} The user data if the user is authenticated, otherwise undefined.
+ * Retrieves the authenticated user's details from the database.
+ * @returns A promise that resolves to the user's data if found, otherwise undefined.
  */
 export const getAuthUserDetails = async () => {
-  const user = await currentUser();
+  const user = await withRetry(async () => await currentUser());
   if (!user) {
     return;
   }
@@ -60,7 +62,7 @@ export const createTeamUser = async (agencyId: string, user: User) => {
  * @returns The agency ID of the created user or the agency ID of the user if the invitation does not exist.
  */
 export const verifyAndAcceptInvitation = async () => {
-  const user = await currentUser();
+  const user = await withRetry(async () => await currentUser());
   if (!user) return redirect("/sign-in");
   const invitationExists = await db.invitation.findUnique({
     where: {
