@@ -32,9 +32,9 @@ const meta: Meta<{
             <td className="px-6 py-4">
               <div className="flex overflow-x-clip rounded-md border shadow">
                 {Object.entries(colors).map(([name, value], idx) => {
-                  const isHex = value.startsWith("#")
+                  const isHex = value.toString().startsWith("#")
                   const style = window.getComputedStyle(document.body)
-                  const variable = value.match(/var\(([^)]+)\)/)?.[1] ?? ""
+                  const variable = value.toString().match(/var\(([^)]+)\)/)?.[1] ?? ""
                   const [h, s, l] =
                     style.getPropertyValue(variable).match(/\d+/g) ?? []
                   const colorHSL = isHex
