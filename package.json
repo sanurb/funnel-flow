@@ -8,6 +8,7 @@
     "start": "next start",
     "lint": "next lint",
     "postinstall": "prisma generate",
+    "storybook:bun": "bun --bun run storybook",
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build"
   },
