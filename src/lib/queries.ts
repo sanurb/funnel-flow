@@ -586,3 +586,16 @@ export const sendInvitation = async (
 
   return resposne
 }
+
+/**
+ * Retrieves the media files associated with a subaccount.
+ * @param subaccountId - The ID of the subaccount.
+ * @returns A Promise that resolves to the media files.
+ */
+export const getMedia = async (subaccountId: string) => {
+  const mediafiles = await db.subAccount.findUnique({
+    where: { id: subaccountId },
+    include: { Media: true },
+  })
+  return mediafiles;
+}
