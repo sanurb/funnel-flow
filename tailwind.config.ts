@@ -19,6 +19,14 @@ module.exports = withUt({
       },
     },
     extend: {
+      fontSize: {
+        small: '0.875rem',
+        normal: 'clamp(0.875rem, 1vw, 1rem)',
+        medium: 'clamp(1rem, 2vw, 1.25rem)',
+        large: 'clamp(1.125rem, 4vw, 1.5rem)',
+        xl: 'clamp(1.25rem, 4vw, 1.75rem)',
+        xxl: 'clamp(1.25rem, 4vw, 2.5rem);'
+      },
       colors: {
         tremor: {
           brand: {

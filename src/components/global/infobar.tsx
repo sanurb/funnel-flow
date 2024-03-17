@@ -88,13 +88,13 @@ const InfoBar = ({ notifications, subAccountId, className, role }: Props) => {
                     </Avatar>
                     <div className="flex flex-col">
                       <p>
-                        <span className="font-bold">
+                        <span className="font-bold text-normal">
                           {notification.notification.split('|')[0]}
                         </span>
-                        <span className="text-muted-foreground">
+                        <span className="text-muted-foreground text-normal">
                           {notification.notification.split('|')[1]}
                         </span>
-                        <span className="font-bold">
+                        <span className="font-bold text-normal">
                           {notification.notification.split('|')[2]}
                         </span>
                       </p>

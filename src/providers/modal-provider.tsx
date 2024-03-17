@@ -7,7 +7,7 @@ interface ModalProviderProps {
     children: React.ReactNode;
   }
   
-  type ModalData = {
+  export type ModalData = {
     user?: User;
     agency?: Agency;
   };
@@ -15,7 +15,7 @@ interface ModalProviderProps {
   type ModalContextType = {
     data: ModalData;
     isOpen: boolean;
-    setOpen: (modal: ReactNode, fetchData?: () => Promise<ModalData>) => Promise<void>;
+    setOpen: (modal: React.ReactNode, fetchData?: () => Promise<any>) => void
     setClose: () => void;
   };
   

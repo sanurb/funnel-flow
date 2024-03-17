@@ -1,17 +1,20 @@
 "use server";
 
 import { clerkClient, currentUser } from "@clerk/nextjs";
-import { db } from "./db";
-import { redirect } from "next/navigation";
 import { Agency, Plan, Role, SubAccount, User } from "@prisma/client";
+import { redirect } from "next/navigation";
 import { v4 } from "uuid";
+import { db } from "./db";
+import { CreateMediaType } from "./types";
+import { withRetry } from "./utils";
+
 
 /**
- * Retrieves the details of the authenticated user.
- * @returns {Promise<UserData | undefined>} The user data if the user is authenticated, otherwise undefined.
+ * Retrieves the authenticated user's details from the database.
+ * @returns A promise that resolves to the user's data if found, otherwise undefined.
  */
 export const getAuthUserDetails = async () => {
-  const user = await currentUser();
+  const user = await withRetry(async () => await currentUser());
   if (!user) {
     return;
   }
@@ -60,7 +63,7 @@ export const createTeamUser = async (agencyId: string, user: User) => {
  * @returns The agency ID of the created user or the agency ID of the user if the invitation does not exist.
  */
 export const verifyAndAcceptInvitation = async () => {
-  const user = await currentUser();
+  const user = await withRetry(async () => await currentUser());
   if (!user) return redirect("/sign-in");
   const invitationExists = await db.invitation.findUnique({
     where: {
@@ -583,4 +586,53 @@ export const sendInvitation = async (
   }
 
   return resposne
+}
+
+/**
+ * Retrieves the media files associated with a subaccount.
+ * @param subaccountId - The ID of the subaccount.
+ * @returns A Promise that resolves to the media files.
+ */
+export const getMedia = async (subaccountId: string) => {
+  const mediafiles = await db.subAccount.findUnique({
+    where: { id: subaccountId },
+    include: { Media: true },
+  })
+  return mediafiles;
+}
+
+/**
+ * Creates a new media entry in the database.
+ * 
+ * @param subaccountId - The ID of the subaccount.
+ * @param mediaFile - The media file object containing the link and name.
+ * @returns A Promise that resolves to the response from the database.
+ */
+export const createMedia = async (
+  subaccountId: string,
+  mediaFile: CreateMediaType
+) => {
+  const response = await db.media.create({
+    data: {
+      link: mediaFile.link,
+      name: mediaFile.name,
+      subAccountId: subaccountId,
+    },
+  })
+
+  return response
+}
+
+/**
+ * Deletes a media item from the database.
+ * @param mediaId - The ID of the media item to delete.
+ * @returns A Promise that resolves to the response from the database.
+ */
+export const deleteMedia = async (mediaId: string) => {
+  const response = await db.media.delete({
+    where: {
+      id: mediaId,
+    },
+  })
+  return response
 }

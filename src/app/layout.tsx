@@ -1,12 +1,10 @@
+import { Toaster as SonnarToaster } from '@/components/ui/sonner'
+import { Toaster } from '@/components/ui/toaster'
+import ModalProvider from '@/providers/modal-provider'
+import { ThemeProvider } from '@/providers/theme-provider'
 import type { Metadata } from 'next'
 import { DM_Sans } from 'next/font/google'
 import './globals.css'
-import { ClerkProvider } from '@clerk/nextjs'
-import { dark } from '@clerk/themes'
-import { ThemeProvider } from '@/providers/theme-provider'
-import { Toaster } from '@/components/ui/toaster'
-import { Toaster as SonnarToaster } from '@/components/ui/sonner'
-import ModalProvider from '@/providers/modal-provider'
 
 const font = DM_Sans({ subsets: ['latin'] })
 
@@ -32,7 +30,7 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          <ModalProvider>  
+          <ModalProvider>
             {children}
             <Toaster />
             <SonnarToaster position="bottom-left" />
