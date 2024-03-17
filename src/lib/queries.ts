@@ -5,6 +5,7 @@ import { Agency, Plan, Role, SubAccount, User } from "@prisma/client";
 import { redirect } from "next/navigation";
 import { v4 } from "uuid";
 import { db } from "./db";
+import { CreateMediaType } from "./types";
 import { withRetry } from "./utils";
 
 
@@ -598,4 +599,40 @@ export const getMedia = async (subaccountId: string) => {
     include: { Media: true },
   })
   return mediafiles;
+}
+
+/**
+ * Creates a new media entry in the database.
+ * 
+ * @param subaccountId - The ID of the subaccount.
+ * @param mediaFile - The media file object containing the link and name.
+ * @returns A Promise that resolves to the response from the database.
+ */
+export const createMedia = async (
+  subaccountId: string,
+  mediaFile: CreateMediaType
+) => {
+  const response = await db.media.create({
+    data: {
+      link: mediaFile.link,
+      name: mediaFile.name,
+      subAccountId: subaccountId,
+    },
+  })
+
+  return response
+}
+
+/**
+ * Deletes a media item from the database.
+ * @param mediaId - The ID of the media item to delete.
+ * @returns A Promise that resolves to the response from the database.
+ */
+export const deleteMedia = async (mediaId: string) => {
+  const response = await db.media.delete({
+    where: {
+      id: mediaId,
+    },
+  })
+  return response
 }
