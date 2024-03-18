@@ -636,3 +636,15 @@ export const deleteMedia = async (mediaId: string) => {
   })
   return response
 }
+
+/**
+ * Retrieves the details of a pipeline from the database.
+ * @param pipelineId - The ID of the pipeline to retrieve.
+ * @returns A promise that resolves to the pipeline details.
+ */
+export const getPipelineDetails = async (pipelineId: string) => {
+  const response = await db.pipeline.findUnique({
+    where: { id: pipelineId },
+  })
+  return response
+}
