@@ -2,7 +2,7 @@
     overflow: hidden;
   }
   
-  @media (min-width: 565px) and (max-width: 639px) {
+  @media (min-width: 565px) and (max-width: 640px) {
     .customOverflow {
       overflow-y: auto;
     }
