@@ -10,7 +10,7 @@ import {
 } from "@prisma/client";
 import { z } from 'zod';
 import { db } from "./db";
-import { _getTicketsWithAllRelations, getAuthUserDetails, getMedia, getPipelineDetails, getTicketsWithTags, getUserPermissions } from "./queries";
+import { _getTicketsWithAllRelations, getAuthUserDetails, getFunnels, getMedia, getPipelineDetails, getTicketsWithTags, getUserPermissions } from "./queries";
 
 export type NotificationWithUser =
   | ({
@@ -99,3 +99,9 @@ export const TicketFormSchema = z.object({
 export type TicketDetails = Prisma.PromiseReturnType<
   typeof _getTicketsWithAllRelations
 >
+
+export type FunnelsForSubAccount = Prisma.PromiseReturnType<
+  typeof getFunnels
+>[0]
+
+export type UpsertFunnelPage = Prisma.FunnelPageCreateWithoutFunnelInput
