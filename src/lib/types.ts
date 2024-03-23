@@ -100,6 +100,31 @@ export type TicketDetails = Prisma.PromiseReturnType<
   typeof _getTicketsWithAllRelations
 >
 
+export const ContactUserFormSchema = z.object({
+  name: z.string().min(1, 'Required'),
+  email: z.string().email(),
+})
+
+export type Address = {
+  city: string
+  country: string
+  line1: string
+  postal_code: string
+  state: string
+}
+
+export type ShippingInfo = {
+  address: Address
+  name: string
+}
+
+export type StripeCustomerType = {
+  email: string
+  name: string
+  shipping: ShippingInfo
+  address: Address
+}
+
 export type FunnelsForSubAccount = Prisma.PromiseReturnType<
   typeof getFunnels
 >[0]
