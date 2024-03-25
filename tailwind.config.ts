@@ -25,7 +25,7 @@ module.exports = withUt({
         medium: 'clamp(1rem, 2vw, 1.25rem)',
         large: 'clamp(1.125rem, 4vw, 1.5rem)',
         xl: 'clamp(1.25rem, 4vw, 1.75rem)',
-        xxl: 'clamp(1.25rem, 4vw, 2.5rem);'
+        xxl: 'clamp(9rem, 4vw, 10.5rem);'
       },
       colors: {
         tremor: {
