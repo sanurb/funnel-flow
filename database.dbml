@@ -125,8 +125,8 @@ Enum InvitationStatus {
 }
 
 Enum Plan {
-  price_1OYxkqFj9oKEERu1NbKUxXxN
-  price_1OYxkqFj9oKEERu1KfJGWxgN
+  price_1Oxy8iFFLDxsEeNR7FNetB02
+  price_1Oxy9vFFLDxsEeNRnJLlvR86
 }
 
 Table User {
