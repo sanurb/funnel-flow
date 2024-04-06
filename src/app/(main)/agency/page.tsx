@@ -4,7 +4,7 @@ import { Plan } from '@prisma/client';
 import { redirect } from 'next/navigation';
 import { getAuthUserDetails, verifyAndAcceptInvitation } from '../../../lib/queries';
 
-interface SearchParams {
+interface ISearchParams {
   plan: Plan | null;
   state: string | null;
   code: string | null;
@@ -12,7 +12,7 @@ interface SearchParams {
 
 type UserRole = 'SUBACCOUNT_GUEST' | 'SUBACCOUNT_USER' | 'AGENCY_OWNER' | 'AGENCY_ADMIN';
 
-type RedirectPathResolver = (searchParams: SearchParams, agencyId: string) => string;
+type RedirectPathResolver = (searchParams: ISearchParams, agencyId: string) => string;
 
 interface RoleToRedirectPathMap {
   [role: string]: string | RedirectPathResolver;
@@ -21,26 +21,26 @@ interface RoleToRedirectPathMap {
 const roleToRedirectPath: RoleToRedirectPathMap = {
   SUBACCOUNT_GUEST: '/subaccount',
   SUBACCOUNT_USER: '/subaccount',
-  AGENCY_OWNER: (searchParams: SearchParams, agencyId: string) => determineAgencyRedirectPath(searchParams, agencyId),
-  AGENCY_ADMIN: (searchParams: SearchParams, agencyId: string) => determineAgencyRedirectPath(searchParams, agencyId),
+  AGENCY_OWNER: (searchParams: ISearchParams, agencyId: string) => determineAgencyRedirectPath(searchParams, agencyId),
+  AGENCY_ADMIN: (searchParams: ISearchParams, agencyId: string) => determineAgencyRedirectPath(searchParams, agencyId),
 };
 
-function determineAgencyRedirectPath(searchParams: SearchParams, agencyId: string): string {
+function determineAgencyRedirectPath(searchParams: ISearchParams, agencyId: string): string {
   if (searchParams.plan) {
-    return /agency/${agencyId}/billing?plan=${searchParams.plan};
+    return `/agency/${agencyId}/billing?plan=${searchParams.plan}`;
   }
-  return handleStateRedirect(searchParams, agencyId) || /agency/${agencyId};
+  return handleStateRedirect(searchParams, agencyId) || `/agency/${agencyId}`;
 }
 
-function handleStateRedirect(searchParams: SearchParams, agencyId: string): string {
+function handleStateRedirect(searchParams: ISearchParams, agencyId: string): string {
   if (!searchParams.state) {
-    return /agency/${agencyId};
+    return `/agency/${agencyId}`;
   }
-  const [statePath, stateAgencyId] = searchParams.state.split('_');
+  const [statePath, stateAgencyId] = searchParams.state.split('___');
   if (!stateAgencyId) {
     return 'NOT_AUTHORIZED';
   }
-  return /agency/${stateAgencyId}/${statePath}?code=${searchParams.code};
+  return `/agency/${stateAgencyId}/${statePath}?code=${searchParams.code}`;
 }
 
 const Page = async ({ searchParams }: { searchParams: { plan: Plan; state: string; code: string } }) => {
