@@ -18,3 +18,7 @@ export async function withRetry<T>(fn: () => Promise<T>, retries: number = 3, de
     throw error;
   }
 }
+
+export const formatDate = (date: Date): string => {
+  return `${date.toDateString()} ${date.toLocaleTimeString()}`;
+};
