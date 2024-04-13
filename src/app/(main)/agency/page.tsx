@@ -58,6 +58,7 @@ const Page = async ({ searchParams }: { searchParams: { plan: Plan; state: strin
   }
 
   const authUser = await currentUser();
+  console.log(`authUser: ${authUser}`);
   if (!authUser) {
     return <div>Not authorized</div>;
   }

@@ -53,7 +53,7 @@ export const getAuthUserDetails = async () => {
     },
   });
 
-  return userData;
+  return userData ?? null;
 };
 
 /**
