@@ -1,6 +1,6 @@
-'use client'
-import React, { useEffect } from 'react'
-import { z } from 'zod'
+"use client";
+import React, { useEffect } from "react";
+import { z } from "zod";
 import {
   Form,
   FormControl,
@@ -9,85 +9,85 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from '@/components/ui/form'
-import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card'
-import { useForm } from 'react-hook-form'
-import { Funnel } from '@prisma/client'
-import { Input } from '../ui/input'
-import { Textarea } from '../ui/textarea'
+} from "@/components/ui/form";
+import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
+import { useForm } from "react-hook-form";
+import { Funnel } from "@prisma/client";
+import { Input } from "../ui/input";
+import { Textarea } from "../ui/textarea";
 
-import { Button } from '../ui/button'
-import Loading from '../global/loading'
-import { CreateFunnelFormSchema } from '@/lib/types'
-import { saveActivityLogsNotification, upsertFunnel } from '@/lib/queries'
-import { v4 } from 'uuid'
-import { toast } from '../ui/use-toast'
-import { useModal } from '@/providers/modal-provider'
-import { useRouter } from 'next/navigation'
-import { zodResolver } from '@hookform/resolvers/zod'
-import FileUpload from '../global/file-upload'
+import { Button } from "../ui/button";
+import Loading from "../global/loading";
+import { CreateFunnelFormSchema } from "@/lib/types";
+import { saveActivityLogsNotification, upsertFunnel } from "@/lib/queries";
+import { v4 } from "uuid";
+import { toast } from "../ui/use-toast";
+import { useModal } from "@/providers/modal-provider";
+import { useRouter } from "next/navigation";
+import { zodResolver } from "@hookform/resolvers/zod";
+import FileUpload from "../global/file-upload";
 
 interface CreateFunnelProps {
-  defaultData?: Funnel
-  subAccountId: string
+  defaultData?: Funnel;
+  subAccountId: string;
 }
 
 const FunnelForm: React.FC<CreateFunnelProps> = ({
   defaultData,
   subAccountId,
 }) => {
-  const { setClose } = useModal()
-  const router = useRouter()
+  const { setClose } = useModal();
+  const router = useRouter();
   const form = useForm<z.infer<typeof CreateFunnelFormSchema>>({
-    mode: 'onChange',
+    mode: "onChange",
     resolver: zodResolver(CreateFunnelFormSchema),
     defaultValues: {
-      name: defaultData?.name || '',
-      description: defaultData?.description || '',
-      favicon: defaultData?.favicon || '',
-      subDomainName: defaultData?.subDomainName || '',
+      name: defaultData?.name || "",
+      description: defaultData?.description || "",
+      favicon: defaultData?.favicon || "",
+      subDomainName: defaultData?.subDomainName || "",
     },
-  })
+  });
 
   useEffect(() => {
     if (defaultData) {
       form.reset({
-        description: defaultData.description || '',
-        favicon: defaultData.favicon || '',
-        name: defaultData.name || '',
-        subDomainName: defaultData.subDomainName || '',
-      })
+        description: defaultData.description || "",
+        favicon: defaultData.favicon || "",
+        name: defaultData.name || "",
+        subDomainName: defaultData.subDomainName || "",
+      });
     }
-  }, [defaultData])
+  }, [defaultData]);
 
-  const isLoading = form.formState.isLoading
+  const isLoading = form.formState.isLoading;
 
   const onSubmit = async (values: z.infer<typeof CreateFunnelFormSchema>) => {
-    if (!subAccountId) return
+    if (!subAccountId) return;
     const response = await upsertFunnel(
       subAccountId,
-      { ...values, liveProducts: defaultData?.liveProducts || '[]' },
+      { ...values, liveProducts: defaultData?.liveProducts || "[]" },
       defaultData?.id || v4()
-    )
+    );
     await saveActivityLogsNotification({
       agencyId: undefined,
       description: `Update funnel | ${response.name}`,
       subaccountId: subAccountId,
-    })
+    });
     if (response)
       toast({
-        title: 'Success',
-        description: 'Saved funnel details',
-      })
+        title: "Success",
+        description: "Saved funnel details",
+      });
     else
       toast({
-        variant: 'destructive',
-        title: 'Oppse!',
-        description: 'Could not save funnel details',
-      })
-    setClose()
-    router.refresh()
-  }
+        variant: "destructive",
+        title: "Oppse!",
+        description: "Could not save funnel details",
+      });
+    setClose();
+    router.refresh();
+  };
   return (
     <Card className="flex-1">
       <CardHeader>
@@ -107,10 +107,7 @@ const FunnelForm: React.FC<CreateFunnelProps> = ({
                 <FormItem>
                   <FormLabel>Funnel Name</FormLabel>
                   <FormControl>
-                    <Input
-                      placeholder="Name"
-                      {...field}
-                    />
+                    <Input placeholder="Name" {...field} />
                   </FormControl>
                 </FormItem>
               )}
@@ -139,10 +136,7 @@ const FunnelForm: React.FC<CreateFunnelProps> = ({
                 <FormItem>
                   <FormLabel>Sub domain</FormLabel>
                   <FormControl>
-                    <Input
-                      placeholder="Sub domain for funnel"
-                      {...field}
-                    />
+                    <Input placeholder="Sub domain for funnel" {...field} />
                   </FormControl>
                 </FormItem>
               )}
@@ -165,18 +159,14 @@ const FunnelForm: React.FC<CreateFunnelProps> = ({
                 </FormItem>
               )}
             />
-            <Button
-              className="w-20 mt-4"
-              disabled={isLoading}
-              type="submit"
-            >
-              {form.formState.isSubmitting ? <Loading /> : 'Save'}
+            <Button className="w-20 mt-4" disabled={isLoading} type="submit">
+              {form.formState.isSubmitting ? <Loading /> : "Save"}
             </Button>
           </form>
         </Form>
       </CardContent>
     </Card>
-  )
-}
+  );
+};
 
-export default FunnelForm
+export default FunnelForm;

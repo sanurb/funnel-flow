@@ -1,34 +1,34 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { currentUser } from '@clerk/nextjs';
-import { db } from '@/lib/db';
-import { getAuthUserDetails } from '@/lib/queries';
+import { describe, it, expect, vi, beforeEach } from "vitest";
+import { currentUser } from "@clerk/nextjs";
+import { db } from "@/lib/db";
+import { getAuthUserDetails } from "@/lib/queries";
 
-vi.mock('@clerk/nextjs', () => ({
-  currentUser: vi.fn()
+vi.mock("@clerk/nextjs", () => ({
+  currentUser: vi.fn(),
 }));
 
-vi.mock('@/lib/db', () => ({
-    db: {
-      user: {
-        findUnique: vi.fn()
-      }
-    }
-  }));
+vi.mock("@/lib/db", () => ({
+  db: {
+    user: {
+      findUnique: vi.fn(),
+    },
+  },
+}));
 
-describe('getAuthUserDetails', () => {
+describe("getAuthUserDetails", () => {
   beforeEach(() => {
     vi.resetAllMocks();
   });
 
-  it('returns user data if the user is authenticated and data is found', async () => {
+  it("returns user data if the user is authenticated and data is found", async () => {
     const mockUser = {
-      id: '123',
-      emailAddresses: [{ emailAddress: 'test@example.com' }]
+      id: "123",
+      emailAddresses: [{ emailAddress: "test@example.com" }],
     };
     const mockUserData = {
-      id: '123',
-      email: 'test@example.com',
-      Permissions: {}
+      id: "123",
+      email: "test@example.com",
+      Permissions: {},
     };
 
     vi.mocked(currentUser).mockResolvedValue(mockUser);
@@ -39,14 +39,14 @@ describe('getAuthUserDetails', () => {
     expect(result).toEqual(mockUserData);
     expect(db.user.findUnique).toHaveBeenCalledWith({
       where: { email: mockUser.emailAddresses[0].emailAddress },
-      include: expect.any(Object)
+      include: expect.any(Object),
     });
   });
 
-  it('returns undefined if the user is authenticated but no data is found', async () => {
+  it("returns undefined if the user is authenticated but no data is found", async () => {
     const mockUser = {
-      id: '123',
-      emailAddresses: [{ emailAddress: 'test@example.com' }]
+      id: "123",
+      emailAddresses: [{ emailAddress: "test@example.com" }],
     };
 
     vi.mocked(currentUser).mockResolvedValue(mockUser);
@@ -58,7 +58,7 @@ describe('getAuthUserDetails', () => {
     expect(result).toBeNull();
   });
 
-  it('returns undefined if the user is not authenticated', async () => {
+  it("returns undefined if the user is not authenticated", async () => {
     vi.mocked(currentUser).mockResolvedValue(null);
 
     const result = await getAuthUserDetails();
