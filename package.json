@@ -6,7 +6,8 @@
     "dev": "next dev",
     "build": "prisma generate && next build",
     "start": "next start",
-    "lint": "next lint",
+    "lint": "biome check .",
+    "lint.perf": "npx oxlint -D perf",
     "postinstall": "prisma generate",
     "test": "vitest"
   },
