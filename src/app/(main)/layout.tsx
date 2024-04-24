@@ -1,11 +1,11 @@
-import { ClerkProvider } from '@clerk/nextjs'
-import React from 'react'
-import { dark } from '@clerk/themes'
+import { ClerkProvider } from "@clerk/nextjs";
+import type React from "react";
+import { dark } from "@clerk/themes";
 
 const Layout = ({ children }: { children: React.ReactNode }) => {
-  return (
-    <ClerkProvider appearance={{ baseTheme: dark }}>{children}</ClerkProvider>
-  )
-}
+	return (
+		<ClerkProvider appearance={{ baseTheme: dark }}>{children}</ClerkProvider>
+	);
+};
 
-export default Layout
+export default Layout;

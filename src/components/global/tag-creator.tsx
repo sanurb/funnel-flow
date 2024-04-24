@@ -1,5 +1,5 @@
 "use client";
-import { Tag } from "@prisma/client";
+import type { Tag } from "@prisma/client";
 import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import {

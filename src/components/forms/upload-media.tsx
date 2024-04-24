@@ -1,17 +1,17 @@
-'use client'
-import React from 'react'
-import { z } from 'zod'
-import { useToast } from '../ui/use-toast'
-import { useRouter } from 'next/navigation'
-import { useForm } from 'react-hook-form'
-import { zodResolver } from '@hookform/resolvers/zod'
+"use client";
+import React from "react";
+import { z } from "zod";
+import { useToast } from "../ui/use-toast";
+import { useRouter } from "next/navigation";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
 import {
   Card,
   CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
-} from '../ui/card'
+} from "../ui/card";
 import {
   Form,
   FormControl,
@@ -19,51 +19,51 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from '../ui/form'
-import { createMedia, saveActivityLogsNotification } from '@/lib/queries'
-import { Input } from '../ui/input'
-import FileUpload from '../global/file-upload'
-import { Button } from '../ui/button'
+} from "../ui/form";
+import { createMedia, saveActivityLogsNotification } from "@/lib/queries";
+import { Input } from "../ui/input";
+import FileUpload from "../global/file-upload";
+import { Button } from "../ui/button";
 
 type Props = {
-  subaccountId: string
-}
+  subaccountId: string;
+};
 
 const formSchema = z.object({
-  link: z.string().min(1, { message: 'Media File is required' }),
-  name: z.string().min(1, { message: 'Name is required' }),
-})
+  link: z.string().min(1, { message: "Media File is required" }),
+  name: z.string().min(1, { message: "Name is required" }),
+});
 
 const UploadMediaForm = ({ subaccountId }: Props) => {
-  const { toast } = useToast()
-  const router = useRouter()
+  const { toast } = useToast();
+  const router = useRouter();
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
-    mode: 'onSubmit',
+    mode: "onSubmit",
     defaultValues: {
-      link: '',
-      name: '',
+      link: "",
+      name: "",
     },
-  })
+  });
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
     try {
-      const response = await createMedia(subaccountId, values)
+      const response = await createMedia(subaccountId, values);
       await saveActivityLogsNotification({
         agencyId: undefined,
         description: `Uploaded a media file | ${response.name}`,
         subaccountId,
-      })
+      });
 
-      toast({ title: 'Succes', description: 'Uploaded media' })
-      router.refresh()
+      toast({ title: "Succes", description: "Uploaded media" });
+      router.refresh();
     } catch (error) {
-      console.log(error)
+      console.log(error);
       toast({
-        variant: 'destructive',
-        title: 'Failed',
-        description: 'Could not uploaded media',
-      })
+        variant: "destructive",
+        title: "Failed",
+        description: "Could not uploaded media",
+      });
     }
   }
 
@@ -85,10 +85,7 @@ const UploadMediaForm = ({ subaccountId }: Props) => {
                 <FormItem className="flex-1">
                   <FormLabel>File Name</FormLabel>
                   <FormControl>
-                    <Input
-                      placeholder="Your agency name"
-                      {...field}
-                    />
+                    <Input placeholder="Your agency name" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -112,17 +109,14 @@ const UploadMediaForm = ({ subaccountId }: Props) => {
                 </FormItem>
               )}
             />
-            <Button
-              type="submit"
-              className="mt-4"
-            >
+            <Button type="submit" className="mt-4">
               Upload Media
             </Button>
           </form>
         </Form>
       </CardContent>
     </Card>
-  )
-}
+  );
+};
 
-export default UploadMediaForm
+export default UploadMediaForm;

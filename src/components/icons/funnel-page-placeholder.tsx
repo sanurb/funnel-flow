@@ -115,7 +115,7 @@ const FunnelPagePlaceholder = () => {
           />
         </clipPath>
       </defs>
-      <g clip-path="url(#f19aabff22)">
+      <g clipPath="url(#f19aabff22)">
         <path
           className="fill-[#d9d9d9] dark:fill-muted"
           d="M 24.410156 237.574219 L 267.410156 237.574219 L 267.410156 786.277344 L 24.410156 786.277344 Z M 24.410156 237.574219 "
@@ -123,7 +123,7 @@ const FunnelPagePlaceholder = () => {
           fillRule="nonzero"
         />
       </g>
-      <g clip-path="url(#774fba0edd)">
+      <g clipPath="url(#774fba0edd)">
         <path
           className="fill-[#d9d9d9] dark:fill-muted"
           d="M 1418.949219 17.925781 L 1418.949219 211.273438 L 24.40625 211.273438 L 24.40625 17.925781 Z M 1418.949219 17.925781 "
@@ -131,7 +131,7 @@ const FunnelPagePlaceholder = () => {
           fillRule="nonzero"
         />
       </g>
-      <g clip-path="url(#c14bc46e9b)">
+      <g clipPath="url(#c14bc46e9b)">
         <path
           className="fill-[#d9d9d9] dark:fill-muted"
           d="M 951.316406 237.574219 L 1418.953125 237.574219 L 1418.953125 447.5625 L 951.316406 447.5625 Z M 951.316406 237.574219 "
@@ -139,7 +139,7 @@ const FunnelPagePlaceholder = () => {
           fillRule="nonzero"
         />
       </g>
-      <g clip-path="url(#fc27728001)">
+      <g clipPath="url(#fc27728001)">
         <path
           className="fill-[#d9d9d9] dark:fill-muted"
           d="M 951.316406 473.8125 L 1418.953125 473.8125 L 1418.953125 511.925781 L 951.316406 511.925781 Z M 951.316406 473.8125 "
@@ -147,7 +147,7 @@ const FunnelPagePlaceholder = () => {
           fillRule="nonzero"
         />
       </g>
-      <g clip-path="url(#51fb5d13a0)">
+      <g clipPath="url(#51fb5d13a0)">
         <path
           className="fill-[#d9d9d9] dark:fill-muted"
           d="M 951.316406 528.871094 L 1263.949219 528.871094 L 1263.949219 554.0625 L 951.316406 554.0625 Z M 951.316406 528.871094 "
@@ -155,7 +155,7 @@ const FunnelPagePlaceholder = () => {
           fillRule="nonzero"
         />
       </g>
-      <g clip-path="url(#ee285f2161)">
+      <g clipPath="url(#ee285f2161)">
         <path
           className="fill-[#d9d9d9] dark:fill-muted"
           d="M 951.316406 571.3125 L 1263.949219 571.3125 L 1263.949219 596.507812 L 951.316406 596.507812 Z M 951.316406 571.3125 "
@@ -163,7 +163,7 @@ const FunnelPagePlaceholder = () => {
           fillRule="nonzero"
         />
       </g>
-      <g clip-path="url(#f0ea2710d2)">
+      <g clipPath="url(#f0ea2710d2)">
         <path
           className="fill-[#d9d9d9] dark:fill-muted"
           d="M 300.710938 237.574219 L 917.667969 237.574219 L 917.667969 596.507812 L 300.710938 596.507812 Z M 300.710938 237.574219 "
@@ -171,8 +171,8 @@ const FunnelPagePlaceholder = () => {
           fillRule="nonzero"
         />
       </g>
-      <g clip-path="url(#47018aba58)">
-        <g clip-path="url(#a9cfaa9a53)">
+      <g clipPath="url(#47018aba58)">
+        <g clipPath="url(#a9cfaa9a53)">
           <path
             className="fill-[#bfbfbf] dark:fill-background"
             d="M 320.597656 256.882812 L 468.714844 256.882812 L 468.714844 405 L 320.597656 405 Z M 320.597656 256.882812 "
@@ -181,8 +181,8 @@ const FunnelPagePlaceholder = () => {
           />
         </g>
       </g>
-      <g clip-path="url(#08a9aa736e)">
-        <g clip-path="url(#f7b7fea623)">
+      <g clipPath="url(#08a9aa736e)">
+        <g clipPath="url(#f7b7fea623)">
           <path
             className="fill-[#bfbfbf] dark:fill-background"
             d="M 848.375 571.3125 L 369.988281 571.3125 L 369.988281 358.6875 L 848.375 358.6875 Z M 848.375 571.3125 "
@@ -191,7 +191,7 @@ const FunnelPagePlaceholder = () => {
           />
         </g>
       </g>
-      <g clip-path="url(#cd184ededd)">
+      <g clipPath="url(#cd184ededd)">
         <path
           className="fill-[#d9d9d9] dark:fill-muted"
           d="M 300.710938 631.613281 L 451.769531 631.613281 L 451.769531 786.277344 L 300.710938 786.277344 Z M 300.710938 631.613281 "
@@ -199,7 +199,7 @@ const FunnelPagePlaceholder = () => {
           fillRule="nonzero"
         />
       </g>
-      <g clip-path="url(#b8b7be316d)">
+      <g clipPath="url(#b8b7be316d)">
         <path
           className="fill-[#d9d9d9] dark:fill-muted"
           d="M 484.769531 631.613281 L 743.480469 631.613281 L 743.480469 786.277344 L 484.769531 786.277344 Z M 484.769531 631.613281 "
@@ -207,7 +207,7 @@ const FunnelPagePlaceholder = () => {
           fillRule="nonzero"
         />
       </g>
-      <g clip-path="url(#623e45c433)">
+      <g clipPath="url(#623e45c433)">
         <path
           className="fill-[#d9d9d9] dark:fill-muted"
           d="M 766.609375 631.613281 L 917.667969 631.613281 L 917.667969 786.277344 L 766.609375 786.277344 Z M 766.609375 631.613281 "
@@ -215,7 +215,7 @@ const FunnelPagePlaceholder = () => {
           fillRule="nonzero"
         />
       </g>
-      <g clip-path="url(#f118308c68)">
+      <g clipPath="url(#f118308c68)">
         <path
           className="fill-[#d9d9d9] dark:fill-muted"
           d="M 950.667969 631.613281 L 1418.300781 631.613281 L 1418.300781 669.726562 L 950.667969 669.726562 Z M 950.667969 631.613281 "
@@ -223,7 +223,7 @@ const FunnelPagePlaceholder = () => {
           fillRule="nonzero"
         />
       </g>
-      <g clip-path="url(#d0cc3d7cb9)">
+      <g clipPath="url(#d0cc3d7cb9)">
         <path
           className="fill-[#d9d9d9] dark:fill-muted"
           d="M 950.667969 686.671875 L 1263.296875 686.671875 L 1263.296875 711.863281 L 950.667969 711.863281 Z M 950.667969 686.671875 "
@@ -231,7 +231,7 @@ const FunnelPagePlaceholder = () => {
           fillRule="nonzero"
         />
       </g>
-      <g clip-path="url(#57697b4ead)">
+      <g clipPath="url(#57697b4ead)">
         <path
           className="fill-[#d9d9d9] dark:fill-muted"
           d="M 950.667969 729.113281 L 1263.296875 729.113281 L 1263.296875 754.308594 L 950.667969 754.308594 Z M 950.667969 729.113281 "

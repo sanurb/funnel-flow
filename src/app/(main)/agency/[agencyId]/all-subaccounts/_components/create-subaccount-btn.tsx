@@ -1,60 +1,65 @@
-'use client'
-import SubAccountDetails from '@/components/forms/subaccount-details'
-import CustomModal from '@/components/global/custom-modal'
-import { Button } from '@/components/ui/button'
-import { useModal } from '@/providers/modal-provider'
-import { Agency, AgencySidebarOption, SubAccount, User } from '@prisma/client'
-import { PlusCircleIcon } from 'lucide-react'
-import { useCallback } from 'react'
-import { twMerge } from 'tailwind-merge'
+"use client";
+import SubAccountDetails from "@/components/forms/subaccount-details";
+import CustomModal from "@/components/global/custom-modal";
+import { Button } from "@/components/ui/button";
+import { useModal } from "@/providers/modal-provider";
+import type {
+	Agency,
+	AgencySidebarOption,
+	SubAccount,
+	User,
+} from "@prisma/client";
+import { PlusCircleIcon } from "lucide-react";
+import { useCallback } from "react";
+import { twMerge } from "tailwind-merge";
 
 type Props = {
-  user: User & {
-    Agency:
-      | (
-          | Agency
-          | (null & {
-              SubAccount: SubAccount[]
-              SideBarOption: AgencySidebarOption[]
-            })
-        )
-      | null
-  }
-  id: string
-  className: string
-}
+	user: User & {
+		Agency:
+			| (
+					| Agency
+					| (null & {
+							SubAccount: SubAccount[];
+							SideBarOption: AgencySidebarOption[];
+					  })
+			  )
+			| null;
+	};
+	id: string;
+	className: string;
+};
 
 const CreateSubaccountButton = ({ className, id, user }: Props) => {
-  const { setOpen } = useModal()
-  const agencyDetails = user.Agency
-  const handleButtonClick = useCallback(() => {
-    if (!agencyDetails) return;
-  
-    setOpen(
-      <CustomModal
-        title="Create a Subaccount"
-        subheading="You can switch between"
-      >
-        <SubAccountDetails
-          agencyDetails={agencyDetails}
-          userId={user.id}
-          userName={user.name}
-        />
-      </CustomModal>
-    );
-  }, [setOpen, agencyDetails, user.id, user.name]);
+	const { setOpen } = useModal();
+	const agencyDetails = user.Agency;
+	const handleButtonClick = useCallback(() => {
+		if (!agencyDetails) return;
 
-  if (!agencyDetails) return null;
+		setOpen(
+			<CustomModal
+				title="Create a Subaccount"
+				subheading="You can switch between"
+			>
+				<SubAccountDetails
+					agencyDetails={agencyDetails}
+					userId={user.id}
+					userName={user.name}
+				/>
+			</CustomModal>,
+		);
+	}, [setOpen, agencyDetails, user.id, user.name]);
 
-  return (
-    <Button
-      className={twMerge('w-full flex gap-4', className)}
-      onClick={handleButtonClick}
-    >
-      <PlusCircleIcon size={15} />
-      Create Sub Account
-    </Button>
-  );
-}
+	if (!agencyDetails) return null;
 
-export default CreateSubaccountButton
+	return (
+		<Button
+			className={twMerge("w-full flex gap-4", className)}
+			onClick={handleButtonClick}
+		>
+			<PlusCircleIcon size={15} />
+			Create Sub Account
+		</Button>
+	);
+};
+
+export default CreateSubaccountButton;

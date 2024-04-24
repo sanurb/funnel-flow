@@ -27,7 +27,7 @@ import { Input } from '@/components/ui/input'
 
 import { saveActivityLogsNotification, upsertSubAccount } from '@/lib/queries'
 import { useModal } from '@/providers/modal-provider'
-import { Agency, SubAccount } from '@prisma/client'
+import type { Agency, SubAccount } from '@prisma/client'
 import { useEffect } from 'react'
 import FileUpload from '../global/file-upload'
 import Loading from '../global/loading'

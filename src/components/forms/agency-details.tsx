@@ -1,7 +1,7 @@
 "use client";
 import { deleteAgency, initUser, saveActivityLogsNotification, updateAgencyDetails, upsertAgency } from "@/lib/queries";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Agency } from "@prisma/client";
+import type { Agency } from "@prisma/client";
 import { NumberInput } from '@tremor/react';
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";

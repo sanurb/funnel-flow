@@ -1,4 +1,4 @@
-import {
+import type {
   Contact,
   Lane,
   Notification,
@@ -8,7 +8,7 @@ import {
   Ticket,
   User,
 } from "@prisma/client";
-import {
+import type {
   _getTicketsWithAllRelations,
   getAuthUserDetails,
   getFunnels,
@@ -20,7 +20,7 @@ import {
 import { db } from "./db";
 import { z } from "zod";
 
-import Stripe from "stripe";
+import type Stripe from "stripe";
 
 export type NotificationWithUser =
   | ({
