@@ -1,7 +1,7 @@
 "use client";
 import { Badge } from "@/components/ui/badge";
-import { FunnelsForSubAccount } from "@/lib/types";
-import { ColumnDef, Row } from "@tanstack/react-table";
+import type { FunnelsForSubAccount } from "@/lib/types";
+import type { ColumnDef, Row } from "@tanstack/react-table";
 import { ExternalLink } from "lucide-react";
 import Link from "next/link";
 import {formatDate} from "@/lib/utils";

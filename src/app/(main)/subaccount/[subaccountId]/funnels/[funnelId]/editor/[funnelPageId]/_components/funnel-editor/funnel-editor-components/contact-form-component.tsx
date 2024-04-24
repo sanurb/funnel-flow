@@ -2,21 +2,21 @@
 import ContactForm from '@/components/forms/contact-form'
 import { Badge } from '@/components/ui/badge'
 import { toast } from '@/components/ui/use-toast'
-import { EditorBtns } from '@/lib/constants'
+import type { EditorBtns } from '@/lib/constants'
 import {
   getFunnel,
   saveActivityLogsNotification,
   upsertContact,
 } from '@/lib/queries'
 
-import { ContactUserFormSchema } from '@/lib/types'
-import { EditorElement, useEditor } from '@/providers/editor/editor-provider'
+import type { ContactUserFormSchema } from '@/lib/types'
+import { type EditorElement, useEditor } from '@/providers/editor/editor-provider'
 import clsx from 'clsx'
 import { Trash } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 
-import React from 'react'
-import { z } from 'zod'
+import type React from 'react'
+import type { z } from 'zod'
 
 type Props = {
   element: EditorElement

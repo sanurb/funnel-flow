@@ -10,7 +10,7 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card'
-import { PricesList } from '@/lib/types'
+import type { PricesList } from '@/lib/types'
 import { useModal } from '@/providers/modal-provider'
 import { useSearchParams } from 'next/navigation'
 import React from 'react'

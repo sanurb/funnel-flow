@@ -21,11 +21,12 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { useToast } from "@/components/ui/use-toast";
 import { deleteUser } from "@/lib/queries";
-import { UsersWithAgencySubAccountPermissionsSidebarOptions } from "@/lib/types";
+import type { UsersWithAgencySubAccountPermissionsSidebarOptions } from "@/lib/types";
 import { useModal } from "@/providers/modal-provider";
 import { Check, Copy, Edit, MoreHorizontal, Trash } from "lucide-react";
 import { useRouter } from "next/navigation";
-import React, { useState } from "react";
+import type React from "react";
+import { useState } from "react";
 
 interface CellActionsProps {
   rowData: UsersWithAgencySubAccountPermissionsSidebarOptions;

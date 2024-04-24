@@ -6,7 +6,7 @@ import {
   updateLanesOrder,
   updateTicketsOrder,
 } from '@/lib/queries'
-import { LaneDetail } from '@/lib/types'
+import type { LaneDetail } from '@/lib/types'
 import { redirect } from 'next/navigation'
 import React from 'react'
 import PipelineInfoBar from '../_components/pipeline-infobar'

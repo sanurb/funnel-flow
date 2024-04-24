@@ -1,5 +1,5 @@
 'use client'
-import { NotificationWithUser } from '@/lib/types'
+import type { NotificationWithUser } from '@/lib/types'
 import { UserButton } from '@clerk/nextjs'
 import React, { useState } from 'react'
 import { twMerge } from 'tailwind-merge'
@@ -12,7 +12,7 @@ import {
   SheetTrigger,
 } from '../ui/sheet'
 import { Bell } from 'lucide-react'
-import { Role } from '@prisma/client'
+import type { Role } from '@prisma/client'
 import { Card } from '../ui/card'
 import { Switch } from '../ui/switch'
 import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar'

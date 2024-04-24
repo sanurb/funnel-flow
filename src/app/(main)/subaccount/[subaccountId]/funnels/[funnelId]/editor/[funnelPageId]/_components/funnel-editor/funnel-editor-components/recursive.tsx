@@ -1,4 +1,4 @@
-import { EditorElement } from '@/providers/editor/editor-provider'
+import type { EditorElement } from '@/providers/editor/editor-provider'
 import React from 'react'
 import TextComponent from './text'
 import Container from './container'

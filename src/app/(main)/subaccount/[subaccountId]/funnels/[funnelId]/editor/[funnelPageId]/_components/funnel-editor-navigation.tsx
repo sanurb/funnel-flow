@@ -10,8 +10,8 @@ import {
   TooltipTrigger,
 } from '@/components/ui/tooltip'
 import { saveActivityLogsNotification, upsertFunnelPage } from '@/lib/queries'
-import { DeviceTypes, useEditor } from '@/providers/editor/editor-provider'
-import { FunnelPage } from '@prisma/client'
+import { type DeviceTypes, useEditor } from '@/providers/editor/editor-provider'
+import type { FunnelPage } from '@prisma/client'
 import clsx from 'clsx'
 import {
   ArrowLeftCircle,
@@ -24,7 +24,7 @@ import {
 } from 'lucide-react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
-import React, { FocusEventHandler, useEffect } from 'react'
+import React, { type FocusEventHandler, useEffect } from 'react'
 import { toast } from 'sonner'
 
 type Props = {

@@ -6,13 +6,13 @@ import {
   saveActivityLogsNotification,
   updateUser,
 } from "@/lib/queries";
-import {
+import type {
   AuthUserWithAgencySigebarOptionsSubAccounts,
   UserWithPermissionsAndSubAccounts,
 } from "@/lib/types";
 import { useModal } from "@/providers/modal-provider";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { SubAccount, User } from "@prisma/client";
+import type { SubAccount, User } from "@prisma/client";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";

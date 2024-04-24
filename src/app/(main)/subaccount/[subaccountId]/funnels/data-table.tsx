@@ -12,14 +12,14 @@ import {
 } from '@/components/ui/table';
 import {useModal} from '@/providers/modal-provider';
 import {
-    ColumnDef,
+    type ColumnDef,
     flexRender,
     getCoreRowModel,
     getFilteredRowModel,
     useReactTable
 } from '@tanstack/react-table';
 import {Search} from 'lucide-react';
-import React from 'react';
+import type React from 'react';
 
 interface FunnelsDataTableProps<TData, TValue> {
     columns: ColumnDef<TData, TValue>[];

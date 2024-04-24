@@ -41,7 +41,7 @@ const LaunchPad = async ({ params, searchParams }: Props) => {
     subaccountDetails.name &&
     subaccountDetails.state
 
-  let connectedStripeAccount = false
+  const connectedStripeAccount = false
 
   // TODO: Check if stripe account is connected
 

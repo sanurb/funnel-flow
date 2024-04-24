@@ -1,6 +1,6 @@
-import { EditorBtns } from '@/lib/constants'
+import type { EditorBtns } from '@/lib/constants'
 import { TypeIcon } from 'lucide-react'
-import React from 'react'
+import type React from 'react'
 
 type Props = {}
 

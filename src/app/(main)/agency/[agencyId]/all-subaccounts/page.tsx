@@ -22,7 +22,7 @@ import Image from "next/image";
 import Link from "next/link";
 
 import { Button } from "@/components/ui/button";
-import { SubAccount } from "@prisma/client";
+import type { SubAccount } from "@prisma/client";
 import DeleteButton from "./_components/delete-button";
 import CreateSubaccountButton from "./_components/create-subaccount-btn";
 

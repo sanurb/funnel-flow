@@ -1,9 +1,10 @@
 'use client'
 import { Button } from '@/components/ui/button'
 import { useToast } from '@/components/ui/use-toast'
-import { Plan } from '@prisma/client'
+import type { Plan } from '@prisma/client'
 import { PaymentElement, useElements, useStripe } from '@stripe/react-stripe-js'
-import React, { useState } from 'react'
+import type React from 'react'
+import { useState } from 'react'
 
 type Props = {
   selectedPriceId: string | Plan

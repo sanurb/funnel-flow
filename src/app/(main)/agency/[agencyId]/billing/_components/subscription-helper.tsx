@@ -1,7 +1,7 @@
 'use client'
 import SubscriptionFormWrapper from '@/components/forms/subscription-form/subscription-form-wrapper'
 import CustomModal from '@/components/global/custom-modal'
-import { PricesList } from '@/lib/types'
+import type { PricesList } from '@/lib/types'
 import { useModal } from '@/providers/modal-provider'
 import { useSearchParams } from 'next/navigation'
 import React, { useEffect } from 'react'

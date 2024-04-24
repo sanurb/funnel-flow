@@ -4,8 +4,8 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from '@/components/ui/accordion'
-import { EditorBtns } from '@/lib/constants'
-import React from 'react'
+import type { EditorBtns } from '@/lib/constants'
+import type React from 'react'
 import TextPlaceholder from './text-placeholder'
 import ContainerPlaceholder from './container-placeholder'
 import VideoPlaceholder from './video-placeholder'

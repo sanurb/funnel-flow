@@ -1,8 +1,8 @@
 "use client";
 
-import { PricesList, TicketDetails } from "@/lib/types";
-import { Agency, Contact, Plan, User } from "@prisma/client";
-import { FC, ReactNode, createContext, useContext, useState } from "react";
+import type { PricesList, TicketDetails } from "@/lib/types";
+import type { Agency, Contact, Plan, User } from "@prisma/client";
+import { type FC, type ReactNode, createContext, useContext, useState } from "react";
 
 interface ModalProviderProps {
     children: React.ReactNode;

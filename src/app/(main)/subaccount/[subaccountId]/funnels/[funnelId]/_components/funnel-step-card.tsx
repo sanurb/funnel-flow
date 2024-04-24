@@ -1,5 +1,5 @@
 import { Card, CardContent } from '@/components/ui/card'
-import { FunnelPage } from '@prisma/client'
+import type { FunnelPage } from '@prisma/client'
 import { ArrowDown, Mail } from 'lucide-react'
 import React from 'react'
 import { Draggable } from 'react-beautiful-dnd'
@@ -12,7 +12,7 @@ type Props = {
 }
 
 const FunnelStepCard = ({ activePage, funnelPage, index }: Props) => {
-  let portal = document.getElementById('blur-page')
+  const portal = document.getElementById('blur-page')
 
   return (
     <Draggable

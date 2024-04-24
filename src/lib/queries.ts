@@ -1,7 +1,7 @@
 "use server";
 
 import { clerkClient, currentUser } from "@clerk/nextjs";
-import {
+import type {
   Agency,
   Lane,
   Plan,
@@ -15,13 +15,13 @@ import {
 import { redirect } from "next/navigation";
 import { v4 } from "uuid";
 import { db } from "./db";
-import {
+import type {
   CreateFunnelFormSchema,
   CreateMediaType,
   UpsertFunnelPage,
 } from "./types";
 import { withRetry } from "./utils";
-import { z } from "zod";
+import type { z } from "zod";
 import { revalidatePath } from "next/cache";
 
 /**

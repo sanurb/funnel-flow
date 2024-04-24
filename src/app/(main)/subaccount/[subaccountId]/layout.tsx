@@ -7,9 +7,9 @@ import {
   verifyAndAcceptInvitation,
 } from "@/lib/queries";
 import { currentUser } from "@clerk/nextjs";
-import { Role } from "@prisma/client";
+import type { Role } from "@prisma/client";
 import { redirect } from "next/navigation";
-import React from "react";
+import type React from "react";
 
 type Props = {
   children: React.ReactNode;

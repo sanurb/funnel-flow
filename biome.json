@@ -1,0 +1,29 @@
+{
+	"$schema": "https://biomejs.dev/schemas/1.7.1/schema.json",
+	"organizeImports": {
+		"enabled": true
+	},
+	"linter": {
+		"ignore": [
+			"ignore-key",
+			"dist",
+			"build",
+			"public",
+			".next",
+			"bun.lockb",
+			"node_modules"
+		],
+		"enabled": true,
+		"rules": {
+			"suspicious": {
+				"noDoubleEquals": "warn",
+				"noAssignInExpressions": "warn"
+			},
+			"recommended": true
+		}
+	},
+	"formatter": {
+		"ignore": [],
+		"indentStyle": "tab"
+	}
+}

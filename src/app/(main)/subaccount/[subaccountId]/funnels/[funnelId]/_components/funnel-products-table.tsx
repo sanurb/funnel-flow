@@ -1,5 +1,6 @@
 'use client'
-import React, { useState } from 'react'
+import type React from 'react'
+import { useState } from 'react'
 import {
   Table,
   TableBody,
@@ -8,13 +9,13 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table'
-import Stripe from 'stripe'
+import type Stripe from 'stripe'
 import Image from 'next/image'
 import {
   saveActivityLogsNotification,
   updateFunnelProducts,
 } from '@/lib/queries'
-import { Funnel } from '@prisma/client'
+import type { Funnel } from '@prisma/client'
 import { useRouter } from 'next/navigation'
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'

@@ -43,7 +43,7 @@ const SettingsTab = (props: Props) => {
 
   const handleOnChanges = (e: any) => {
     const styleSettings = e.target.id
-    let value = e.target.value
+    const value = e.target.value
     const styleObject = {
       [styleSettings]: value,
     }
@@ -64,7 +64,7 @@ const SettingsTab = (props: Props) => {
 
   const handleChangeCustomValues = (e: any) => {
     const settingProperty = e.target.id
-    let value = e.target.value
+    const value = e.target.value
     const styleObject = {
       [settingProperty]: value,
     }
@@ -351,7 +351,7 @@ const SettingsTab = (props: Props) => {
                 {typeof state.editor.selectedElement.styles?.opacity ===
                 'number'
                   ? state.editor.selectedElement.styles?.opacity
-                  : parseFloat(
+                  : Number.parseFloat(
                       (
                         state.editor.selectedElement.styles?.opacity || '0'
                       ).replace('%', '')
@@ -371,7 +371,7 @@ const SettingsTab = (props: Props) => {
               defaultValue={[
                 typeof state.editor.selectedElement.styles?.opacity === 'number'
                   ? state.editor.selectedElement.styles?.opacity
-                  : parseFloat(
+                  : Number.parseFloat(
                       (
                         state.editor.selectedElement.styles?.opacity || '0'
                       ).replace('%', '')
@@ -388,7 +388,7 @@ const SettingsTab = (props: Props) => {
                 {typeof state.editor.selectedElement.styles?.borderRadius ===
                 'number'
                   ? state.editor.selectedElement.styles?.borderRadius
-                  : parseFloat(
+                  : Number.parseFloat(
                       (
                         state.editor.selectedElement.styles?.borderRadius || '0'
                       ).replace('px', '')
@@ -409,7 +409,7 @@ const SettingsTab = (props: Props) => {
                 typeof state.editor.selectedElement.styles?.borderRadius ===
                 'number'
                   ? state.editor.selectedElement.styles?.borderRadius
-                  : parseFloat(
+                  : Number.parseFloat(
                       (
                         state.editor.selectedElement.styles?.borderRadius || '0'
                       ).replace('%', '')

@@ -6,16 +6,16 @@ import { Button } from '@/components/ui/button'
 import { ScrollArea } from '@/components/ui/scroll-area'
 import { toast } from '@/components/ui/use-toast'
 import { upsertFunnelPage } from '@/lib/queries'
-import { FunnelsForSubAccount } from '@/lib/types'
+import type { FunnelsForSubAccount } from '@/lib/types'
 import { useModal } from '@/providers/modal-provider'
-import { FunnelPage } from '@prisma/client'
+import type { FunnelPage } from '@prisma/client'
 import { Check, ExternalLink, LucideEdit } from 'lucide-react'
 import React, { useState } from 'react'
 
 import {
   DragDropContext,
-  DragStart,
-  DropResult,
+  type DragStart,
+  type DropResult,
   Droppable,
 } from 'react-beautiful-dnd'
 import Link from 'next/link'

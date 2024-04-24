@@ -1,6 +1,7 @@
 "use client";
-import React, { useEffect } from "react";
-import { z } from "zod";
+import type React from "react";
+import { useEffect } from "react";
+import type { z } from "zod";
 import {
   Form,
   FormControl,
@@ -12,7 +13,7 @@ import {
 } from "@/components/ui/form";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { useForm } from "react-hook-form";
-import { Funnel } from "@prisma/client";
+import type { Funnel } from "@prisma/client";
 import { Input } from "../ui/input";
 import { Textarea } from "../ui/textarea";
 

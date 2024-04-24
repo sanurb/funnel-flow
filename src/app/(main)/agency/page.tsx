@@ -1,6 +1,6 @@
 import AgencyDetails from '@/components/forms/agency-details';
 import { currentUser } from '@clerk/nextjs';
-import { Plan } from '@prisma/client';
+import type { Plan } from '@prisma/client';
 import { redirect } from 'next/navigation';
 import { getAuthUserDetails, verifyAndAcceptInvitation } from '../../../lib/queries';
 

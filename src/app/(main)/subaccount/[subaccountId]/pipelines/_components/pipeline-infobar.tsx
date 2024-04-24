@@ -15,7 +15,7 @@ import {
 } from '@/components/ui/popover'
 import { cn } from '@/lib/utils'
 import { useModal } from '@/providers/modal-provider'
-import { Pipeline } from '@prisma/client'
+import type { Pipeline } from '@prisma/client'
 import { Check, ChevronsUpDown, Plus } from 'lucide-react'
 import Link from 'next/link'
 import React from 'react'

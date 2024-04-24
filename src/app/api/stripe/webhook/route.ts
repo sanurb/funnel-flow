@@ -1,6 +1,6 @@
-import { NextRequest, NextResponse } from 'next/server'
+import { type NextRequest, NextResponse } from 'next/server'
 import { headers } from 'next/headers'
-import Stripe from 'stripe'
+import type Stripe from 'stripe'
 import { stripe } from '@/lib/stripe'
 import { subscriptionCreated } from '@/lib/stripe/stripe-actions'
 

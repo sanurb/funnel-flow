@@ -3,7 +3,7 @@
 import { icons } from "@/lib/constants";
 import styles from "./MenuOptions.module.css";
 import { useModal } from "@/providers/modal-provider";
-import {
+import type {
   Agency,
   AgencySidebarOption,
   SubAccount,

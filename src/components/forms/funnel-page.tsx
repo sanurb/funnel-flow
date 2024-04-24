@@ -1,6 +1,7 @@
 "use client";
-import React, { useEffect } from "react";
-import { z } from "zod";
+import type React from "react";
+import { useEffect } from "react";
+import type { z } from "zod";
 import {
   Card,
   CardContent,
@@ -23,7 +24,7 @@ import { Input } from "../ui/input";
 import { Button } from "../ui/button";
 import Loading from "../global/loading";
 import { useToast } from "../ui/use-toast";
-import { FunnelPage } from "@prisma/client";
+import type { FunnelPage } from "@prisma/client";
 import { FunnelPageSchema } from "@/lib/types";
 import {
   deleteFunnelePage,

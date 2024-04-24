@@ -1,13 +1,13 @@
 'use client'
 
 import clsx from 'clsx'
-import { ColumnDef } from '@tanstack/react-table'
+import type { ColumnDef } from '@tanstack/react-table'
 import {
   Agency,
   AgencySidebarOption,
   Permissions,
   Prisma,
-  Role,
+  type Role,
   SubAccount,
   User,
 } from '@prisma/client'
@@ -42,7 +42,7 @@ import { deleteUser, getUser } from '@/lib/queries'
 import { useToast } from '@/components/ui/use-toast'
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
-import { UsersWithAgencySubAccountPermissionsSidebarOptions } from '@/lib/types'
+import type { UsersWithAgencySubAccountPermissionsSidebarOptions } from '@/lib/types'
 import CustomModal from '@/components/global/custom-modal'
 
 export const columns: ColumnDef<UsersWithAgencySubAccountPermissionsSidebarOptions>[] =
