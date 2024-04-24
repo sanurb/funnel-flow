@@ -1,131 +1,147 @@
-"use client";
+'use client';
 import {
-	type EditorElement,
-	useEditor,
-} from "@/providers/editor/editor-provider";
-import type React from "react";
-import RecursiveElement from "./recursive";
+    type EditorElement,
+    useEditor
+} from '@/providers/editor/editor-provider';
+import type React from 'react';
+import RecursiveElement from './recursive';
 
-import { v4 } from "uuid";
-import clsx from "clsx";
-import { Badge } from "@/components/ui/badge";
-import { type EditorBtns, defaultStyles } from "@/lib/constants";
+import {Badge} from '@/components/ui/badge';
+import {type EditorBtns, defaultStyles} from '@/lib/constants';
+import clsx from 'clsx';
+import {useMemo} from 'react';
+import {v4} from 'uuid';
 
-type Props = {
-	element: EditorElement;
+const TYPE_BODY = '__body';
+const TYPE_CONTAINER = 'container';
+const TYPE_TEXT = 'text';
+const TYPE_2COL = '2Col';
+const ACTION_ADD_ELEMENT = 'ADD_ELEMENT';
+const ACTION_CHANGE_CLICKED_ELEMENT = 'CHANGE_CLICKED_ELEMENT';
+
+const elementConfig = {
+    [TYPE_TEXT]: {
+        getContent: () => ({innerText: 'Text Component'}),
+        name: TYPE_TEXT,
+        type: TYPE_TEXT
+    },
+    [TYPE_CONTAINER]: {
+        getContent: () => [],
+        name: TYPE_CONTAINER,
+        type: TYPE_CONTAINER
+    },
+    [TYPE_2COL]: {
+        getContent: () => [],
+        name: TYPE_2COL,
+        type: TYPE_2COL
+    }
 };
 
-const TwoColumns = (props: Props) => {
-	const { id, content, type } = props.element;
-	const { dispatch, state } = useEditor();
+type Props = {
+    element: EditorElement;
+};
 
-	const handleOnDrop = (e: React.DragEvent, type: string) => {
-		e.stopPropagation();
-		const componentType = e.dataTransfer.getData("componentType") as EditorBtns;
-		switch (componentType) {
-			case "text":
-				dispatch({
-					type: "ADD_ELEMENT",
-					payload: {
-						containerId: id,
-						elementDetails: {
-							content: { innerText: "Text Component" },
-							id: v4(),
-							name: "Text",
-							styles: {
-								color: "black",
-								...defaultStyles,
-							},
-							type: "text",
-						},
-					},
-				});
-				break;
-			case "container":
-				dispatch({
-					type: "ADD_ELEMENT",
-					payload: {
-						containerId: id,
-						elementDetails: {
-							content: [],
-							id: v4(),
-							name: "Container",
-							styles: { ...defaultStyles },
-							type: "container",
-						},
-					},
-				});
-				break;
-			case "2Col":
-				dispatch({
-					type: "ADD_ELEMENT",
-					payload: {
-						containerId: id,
-						elementDetails: {
-							content: [],
-							id: v4(),
-							name: "Two Columns",
-							styles: { ...defaultStyles },
-							type: "2Col",
-						},
-					},
-				});
-				break;
-		}
-	};
+const TwoColumns = ({element}: Props) => {
+    const {id, content, type, styles} = element;
+    const {dispatch, state} = useEditor();
 
-	const handleDragOver = (e: React.DragEvent) => {
-		e.preventDefault();
-	};
-	const handleDragStart = (e: React.DragEvent, type: string) => {
-		if (type === "__body") return;
-		e.dataTransfer.setData("componentType", type);
-	};
+    const handleOnDrop = (e: React.DragEvent<HTMLDivElement>) => {
+        e.stopPropagation();
+        const componentType = e.dataTransfer.getData(
+            'componentType'
+        ) as EditorBtns;
 
-	const handleOnClickBody = (e: React.MouseEvent) => {
-		e.stopPropagation();
-		dispatch({
-			type: "CHANGE_CLICKED_ELEMENT",
-			payload: {
-				elementDetails: props.element,
-			},
-		});
-	};
+        if (!componentType) return;
 
-	return (
-		<div
-			style={props.element.styles}
-			className={clsx("relative p-4 transition-all", {
-				"h-fit": type === "container",
-				"h-full": type === "__body",
-				"m-4": type === "container",
-				"!border-blue-500":
-					state.editor.selectedElement.id === props.element.id &&
-					!state.editor.liveMode,
-				"!border-solid":
-					state.editor.selectedElement.id === props.element.id &&
-					!state.editor.liveMode,
-				"border-dashed border-[1px] border-slate-300": !state.editor.liveMode,
-			})}
-			id="innerContainer"
-			onDrop={(e) => handleOnDrop(e, id)}
-			onDragOver={handleDragOver}
-			draggable={type !== "__body"}
-			onClick={handleOnClickBody}
-			onDragStart={(e) => handleDragStart(e, "container")}
-		>
-			{state.editor.selectedElement.id === props.element.id &&
-				!state.editor.liveMode && (
-					<Badge className="absolute -top-[23px] -left-[1px] rounded-none rounded-t-lg ">
-						{state.editor.selectedElement.name}
-					</Badge>
-				)}
-			{Array.isArray(content) &&
-				content.map((childElement) => (
-					<RecursiveElement key={childElement.id} element={childElement} />
-				))}
-		</div>
-	);
+        const config =
+            elementConfig[componentType as keyof typeof elementConfig];
+        if (!config) return;
+
+        const elementDetails: EditorElement = {
+            id: v4(),
+            content: config.getContent(),
+            name: config.name,
+            type: config.type as EditorBtns,
+            styles: {...defaultStyles}
+        };
+
+        dispatch({
+            type: ACTION_ADD_ELEMENT,
+            payload: {
+                containerId: id,
+                elementDetails: elementDetails
+            }
+        });
+    };
+
+    const handleDragOver = (e: React.DragEvent<HTMLDivElement>) => {
+        e.preventDefault();
+    };
+
+    const handleOnClickBody = (e: React.MouseEvent<HTMLDivElement>) => {
+        e.stopPropagation();
+        dispatch({
+            type: ACTION_CHANGE_CLICKED_ELEMENT,
+            payload: {elementDetails: element}
+        });
+    };
+
+    const handleDragStart = (e: React.DragEvent<HTMLDivElement>) => {
+        if (!type) return;
+        if (type === TYPE_BODY) return;
+        e.dataTransfer.setData('componentType', type);
+    };
+
+    const handleKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+            handleOnClickBody(e as unknown as React.MouseEvent<HTMLDivElement>);
+        }
+    };
+
+    const className = useMemo(
+        () =>
+            clsx('relative p-4 transition-all', {
+                'h-fit': type === TYPE_CONTAINER,
+                'h-full': type === TYPE_BODY,
+                'm-4': type === TYPE_CONTAINER,
+                '!border-blue-500':
+                    state.editor.selectedElement.id === id &&
+                    !state.editor.liveMode,
+                '!border-solid':
+                    state.editor.selectedElement.id === id &&
+                    !state.editor.liveMode,
+                'border-dashed border-[1px] border-slate-300':
+                    !state.editor.liveMode
+            }),
+        [type, id, state.editor.selectedElement.id, state.editor.liveMode]
+    );
+
+    return (
+        <div
+            style={styles}
+            className={className}
+            id='innerContainer'
+            onDrop={handleOnDrop}
+            onDragOver={handleDragOver}
+            onClick={handleOnClickBody}
+            onDragStart={handleDragStart}
+            onKeyDown={handleKeyDown}
+            draggable={type !== TYPE_BODY}>
+            {state.editor.selectedElement.id === id &&
+                !state.editor.liveMode && (
+                    <Badge className='absolute -top-[23px] -left-[1px] rounded-none rounded-t-lg '>
+                        {state.editor.selectedElement.name}
+                    </Badge>
+                )}
+            {Array.isArray(content) &&
+                content.map((childElement) => (
+                    <RecursiveElement
+                        key={childElement.id}
+                        element={childElement}
+                    />
+                ))}
+        </div>
+    );
 };
 
 export default TwoColumns;
