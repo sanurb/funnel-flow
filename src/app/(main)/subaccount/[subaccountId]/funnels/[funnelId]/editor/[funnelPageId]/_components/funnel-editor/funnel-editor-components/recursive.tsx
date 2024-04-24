@@ -1,38 +1,31 @@
-import type { EditorElement } from "@/providers/editor/editor-provider";
-import React from "react";
-import TextComponent from "./text";
-import Container from "./container";
-import VideoComponent from "./video";
-import LinkComponent from "./link-component";
-import ContactFormComponent from "./contact-form-component";
-import Checkout from "./checkout";
+import type {EditorElement} from '@/providers/editor/editor-provider';
+import type React from 'react';
+import Checkout from './checkout';
+import ContactFormComponent from './contact-form-component';
+import Container from './container';
+import LinkComponent from './link-component';
+import TextComponent from './text';
+import VideoComponent from './video';
 
 type Props = {
-	element: EditorElement;
+    element: EditorElement;
 };
 
-const Recursive = ({ element }: Props) => {
-	switch (element.type) {
-		case "text":
-			return <TextComponent element={element} />;
-		case "container":
-			return <Container element={element} />;
-		case "video":
-			return <VideoComponent element={element} />;
-		case "contactForm":
-			return <ContactFormComponent element={element} />;
-		case "paymentForm":
-			return <Checkout element={element} />;
-		case "2Col":
-			return <Container element={element} />;
-		case "__body":
-			return <Container element={element} />;
+const componentMap: Record<string, React.ComponentType<Props>> = {
+    text: TextComponent,
+    container: Container,
+    video: VideoComponent,
+    link: LinkComponent,
+    contactForm: ContactFormComponent,
+    paymentForm: Checkout,
+    '2Col': Container,
+    __body: Container
+};
 
-		case "link":
-			return <LinkComponent element={element} />;
-		default:
-			return null;
-	}
+const Recursive = ({element}: Props) => {
+    if (!element?.type) return null;
+    const Component = componentMap[element.type];
+    return Component ? <Component element={element} /> : null;
 };
 
 export default Recursive;
