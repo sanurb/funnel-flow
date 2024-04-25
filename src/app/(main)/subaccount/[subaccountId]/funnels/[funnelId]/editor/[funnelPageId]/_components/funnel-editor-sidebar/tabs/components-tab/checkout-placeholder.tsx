@@ -14,7 +14,7 @@ const CheckoutPlaceholder = (props: Props) => {
         <div
             draggable
             onDragStart={(e) => handleDragStart(e, 'paymentForm')}
-            className='cursor-move h-14 w-14 bg-muted rounded-lg flex items-center justify-center'>
+            className='cursor-move h-14 w-14 bg-muted rounded-lg flex items-center justify-center transition duration-300 ease-in-out hover:brightness-150'>
             <Image
                 src='/stripelogo.png'
                 height={40}

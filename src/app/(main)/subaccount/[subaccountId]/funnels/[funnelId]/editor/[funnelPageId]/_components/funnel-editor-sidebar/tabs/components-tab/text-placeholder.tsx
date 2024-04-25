@@ -16,7 +16,7 @@ const TextPlaceholder = (props: Props) => {
             onDragStart={(e) => {
                 handleDragState(e, 'text');
             }}
-            className='cursor-move h-14 w-14 bg-muted rounded-lg flex items-center justify-center'>
+            className='cursor-move h-14 w-14 bg-muted rounded-lg flex items-center justify-center transition duration-300 ease-in-out hover:brightness-150'>
             <TypeIcon size={40} className='text-muted-foreground' />
         </div>
     );

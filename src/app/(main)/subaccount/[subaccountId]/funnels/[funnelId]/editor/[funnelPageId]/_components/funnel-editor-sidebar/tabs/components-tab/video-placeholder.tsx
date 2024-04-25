@@ -13,7 +13,7 @@ const VideoPlaceholder = (props: Props) => {
         <div
             draggable
             onDragStart={(e) => handleDragStart(e, 'video')}
-            className='cursor-move h-14 w-14 bg-muted rounded-lg flex items-center justify-center'>
+            className='cursor-move h-14 w-14 bg-muted rounded-lg flex items-center justify-center transition duration-300 ease-in-out hover:brightness-150'>
             <Youtube size={40} className='text-muted-foreground' />
         </div>
     );
