@@ -1,5 +1,5 @@
 "use client";
-import type { EditorBtns } from "@/lib/constants";
+import { type EditorBtns, editorActionType } from "@/lib/constants";
 import type { FunnelPage } from "@prisma/client";
 import { type Dispatch, createContext, useContext, useReducer } from "react";
 import type { EditorAction } from "./editor-actions";
@@ -72,31 +72,36 @@ const addAnElement = (
 	editorArray: EditorElement[],
 	action: EditorAction,
 ): EditorElement[] => {
-	if (action.type !== "ADD_ELEMENT")
-		throw Error(
+	if (action.type !== editorActionType.ADD_ELEMENT) {
+		throw new Error(
 			"You sent the wrong action type to the Add Element editor State",
 		);
-	return editorArray.map((item) => {
-		if (item.id === action.payload.containerId && Array.isArray(item.content)) {
-			return {
-				...item,
-				content: [...item.content, action.payload.elementDetails],
-			};
-		} else if (item.content && Array.isArray(item.content)) {
-			return {
-				...item,
-				content: addAnElement(item.content, action),
-			};
+	}
+
+	const elements = [...editorArray];
+	const queue = [...elements];
+
+	while (queue.length > 0) {
+		const current = queue.shift();
+		if (
+			current?.id === action.payload.containerId &&
+			Array.isArray(current.content)
+		) {
+			current.content = [...current.content, action.payload.elementDetails];
+			return elements;
 		}
-		return item;
-	});
+		if (Array.isArray(current?.content)) {
+			queue.push(...current.content);
+		}
+	}
+	throw new Error("Container not found");
 };
 
 const updateAnElement = (
 	editorArray: EditorElement[],
 	action: EditorAction,
 ): EditorElement[] => {
-	if (action.type !== "UPDATE_ELEMENT") {
+	if (action.type !== editorActionType.UPDATE_ELEMENT) {
 		throw Error("You sent the wrong action type to the update Element State");
 	}
 	return editorArray.map((item) => {
@@ -116,7 +121,7 @@ const deleteAnElement = (
 	editorArray: EditorElement[],
 	action: EditorAction,
 ): EditorElement[] => {
-	if (action.type !== "DELETE_ELEMENT")
+	if (action.type !== editorActionType.DELETE_ELEMENT)
 		throw Error(
 			"You sent the wrong action type to the Delete Element editor State",
 		);
@@ -135,15 +140,14 @@ const editorReducer = (
 	action: EditorAction,
 ): EditorState => {
 	switch (action.type) {
-		case "ADD_ELEMENT":
+		case editorActionType.ADD_ELEMENT: {
 			const updatedEditorState = {
 				...state.editor,
 				elements: addAnElement(state.editor.elements, action),
 			};
-			// Update the history to include the entire updated EditorState
 			const updatedHistory = [
 				...state.history.history.slice(0, state.history.currentIndex + 1),
-				{ ...updatedEditorState }, // Save a copy of the updated state
+				{ ...updatedEditorState },
 			];
 
 			const newEditorState = {
@@ -157,9 +161,9 @@ const editorReducer = (
 			};
 
 			return newEditorState;
+		}
 
-		case "UPDATE_ELEMENT":
-			// Perform your logic to update the element in the state
+		case editorActionType.UPDATE_ELEMENT: {
 			const updatedElements = updateAnElement(state.editor.elements, action);
 
 			const UpdatedElementIsSelected =
@@ -193,8 +197,9 @@ const editorReducer = (
 				},
 			};
 			return updatedEditor;
+		}
 
-		case "DELETE_ELEMENT":
+		case editorActionType.DELETE_ELEMENT: {
 			// Perform your logic to delete the element from the state
 			const updatedElementsAfterDelete = deleteAnElement(
 				state.editor.elements,
@@ -219,8 +224,9 @@ const editorReducer = (
 				},
 			};
 			return deletedState;
+		}
 
-		case "CHANGE_CLICKED_ELEMENT":
+		case editorActionType.CHANGE_CLICKED_ELEMENT: {
 			const clickedState = {
 				...state,
 				editor: {
@@ -243,7 +249,8 @@ const editorReducer = (
 				},
 			};
 			return clickedState;
-		case "CHANGE_DEVICE":
+		}
+		case editorActionType.CHANGE_DEVICE: {
 			const changedDeviceState = {
 				...state,
 				editor: {
@@ -252,8 +259,9 @@ const editorReducer = (
 				},
 			};
 			return changedDeviceState;
+		}
 
-		case "TOGGLE_PREVIEW_MODE":
+		case editorActionType.TOGGLE_PREVIEW_MODE: {
 			const toggleState = {
 				...state,
 				editor: {
@@ -262,8 +270,9 @@ const editorReducer = (
 				},
 			};
 			return toggleState;
+		}
 
-		case "TOGGLE_LIVE_MODE":
+		case editorActionType.TOGGLE_LIVE_MODE: {
 			const toggleLiveMode: EditorState = {
 				...state,
 				editor: {
@@ -274,8 +283,9 @@ const editorReducer = (
 				},
 			};
 			return toggleLiveMode;
+		}
 
-		case "REDO":
+		case editorActionType.REDO:
 			if (state.history.currentIndex < state.history.history.length - 1) {
 				const nextIndex = state.history.currentIndex + 1;
 				const nextEditorState = { ...state.history.history[nextIndex] };
@@ -291,7 +301,7 @@ const editorReducer = (
 			}
 			return state;
 
-		case "UNDO":
+		case editorActionType.UNDO:
 			if (state.history.currentIndex > 0) {
 				const prevIndex = state.history.currentIndex - 1;
 				const prevEditorState = { ...state.history.history[prevIndex] };
@@ -307,7 +317,7 @@ const editorReducer = (
 			}
 			return state;
 
-		case "LOAD_DATA":
+		case editorActionType.LOAD_DATA:
 			return {
 				...initialState,
 				editor: {
@@ -317,7 +327,7 @@ const editorReducer = (
 				},
 			};
 
-		case "SET_FUNNELPAGE_ID":
+		case editorActionType.SET_FUNNELPAGE_ID: {
 			const { funnelPageId } = action.payload;
 			const updatedEditorStateWithFunnelPageId = {
 				...state.editor,
@@ -339,6 +349,7 @@ const editorReducer = (
 				},
 			};
 			return funnelPageIdState;
+		}
 
 		default:
 			return state;

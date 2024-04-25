@@ -1,6 +1,10 @@
 import type { editorActionType } from "@/lib/constants";
 import type { DeviceTypes, EditorElement } from "./editor-provider";
 
+type EmptyObject = {
+	[K in never]: never;
+};
+
 export type EditorAction =
 	| {
 			type: typeof editorActionType.ADD_ELEMENT;
@@ -30,7 +34,7 @@ export type EditorAction =
 							id: "";
 							content: [];
 							name: "";
-							styles: undefined;
+							styles: EmptyObject;
 							type: null;
 					  };
 			};
