@@ -2,7 +2,7 @@
 import Loading from "@/components/global/loading";
 import { Badge } from "@/components/ui/badge";
 import { toast } from "@/components/ui/use-toast";
-import type { EditorBtns } from "@/lib/constants";
+import { type EditorBtns, editorActionType } from "@/lib/constants";
 import { getFunnel, getSubaccountDetails } from "@/lib/queries";
 import { getStripe } from "@/lib/stripe/stripe-client";
 import {
@@ -103,7 +103,7 @@ const Checkout = (props: Props) => {
 	const handleOnClickBody = (e: React.MouseEvent) => {
 		e.stopPropagation();
 		dispatch({
-			type: "CHANGE_CLICKED_ELEMENT",
+			type: editorActionType.CHANGE_CLICKED_ELEMENT,
 			payload: {
 				elementDetails: props.element,
 			},
@@ -128,7 +128,7 @@ const Checkout = (props: Props) => {
 
 	const handleDeleteElement = () => {
 		dispatch({
-			type: "DELETE_ELEMENT",
+			type: editorActionType.DELETE_ELEMENT,
 			payload: { elementDetails: props.element },
 		});
 	};

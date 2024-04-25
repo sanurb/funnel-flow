@@ -1,6 +1,6 @@
 "use client";
 import { Badge } from "@/components/ui/badge";
-import type { EditorBtns } from "@/lib/constants";
+import { type EditorBtns, editorActionType } from "@/lib/constants";
 
 import {
 	type EditorElement,
@@ -17,10 +17,6 @@ type Props = {
 	element: EditorElement;
 };
 
-const CHANGE_CLICKED_ELEMENT = "CHANGE_CLICKED_ELEMENT";
-const DELETE_ELEMENT = "DELETE_ELEMENT";
-const UPDATE_ELEMENT = "UPDATE_ELEMENT";
-
 const LinkComponent = (props: Props) => {
 	const { dispatch, state } = useEditor();
 
@@ -36,7 +32,7 @@ const LinkComponent = (props: Props) => {
 		(e: React.MouseEvent) => {
 			e.stopPropagation();
 			dispatch({
-				type: CHANGE_CLICKED_ELEMENT,
+				type: editorActionType.CHANGE_CLICKED_ELEMENT,
 				payload: { elementDetails: props.element },
 			});
 		},
@@ -45,7 +41,7 @@ const LinkComponent = (props: Props) => {
 
 	const handleDeleteElement = useCallback(() => {
 		dispatch({
-			type: DELETE_ELEMENT,
+			type: editorActionType.DELETE_ELEMENT,
 			payload: { elementDetails: props.element },
 		});
 	}, [dispatch, props.element]);
@@ -76,7 +72,7 @@ const LinkComponent = (props: Props) => {
 						onBlur={(e) => {
 							const spanElement = e.target as HTMLSpanElement;
 							dispatch({
-								type: UPDATE_ELEMENT,
+								type: editorActionType.UPDATE_ELEMENT,
 								payload: {
 									elementDetails: {
 										...props.element,

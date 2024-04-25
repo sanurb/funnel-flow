@@ -9,6 +9,7 @@ import {
 	TooltipProvider,
 	TooltipTrigger,
 } from "@/components/ui/tooltip";
+import { editorActionType } from "@/lib/constants";
 import { saveActivityLogsNotification, upsertFunnelPage } from "@/lib/queries";
 import {
 	type DeviceTypes,
@@ -46,10 +47,10 @@ const FunnelEditorNavigation = ({
 
 	useEffect(() => {
 		dispatch({
-			type: "SET_FUNNELPAGE_ID",
+			type: editorActionType.SET_FUNNELPAGE_ID,
 			payload: { funnelPageId: funnelPageDetails.id },
 		});
-	}, [funnelPageDetails]);
+	}, [funnelPageDetails, dispatch]);
 
 	const handleOnBlurTitleChange: FocusEventHandler<HTMLInputElement> = async (
 		event,
@@ -79,16 +80,16 @@ const FunnelEditorNavigation = ({
 	};
 
 	const handlePreviewClick = () => {
-		dispatch({ type: "TOGGLE_PREVIEW_MODE" });
-		dispatch({ type: "TOGGLE_LIVE_MODE" });
+		dispatch({ type: editorActionType.TOGGLE_PREVIEW_MODE });
+		dispatch({ type: editorActionType.TOGGLE_LIVE_MODE });
 	};
 
 	const handleUndo = () => {
-		dispatch({ type: "UNDO" });
+		dispatch({ type: editorActionType.UNDO });
 	};
 
 	const handleRedo = () => {
-		dispatch({ type: "REDO" });
+		dispatch({ type: editorActionType.REDO });
 	};
 
 	const handleOnSave = async () => {

@@ -1,5 +1,6 @@
 "use client";
 import { Button } from "@/components/ui/button";
+import { editorActionType } from "@/lib/constants";
 import { getFunnelPageDetails } from "@/lib/queries";
 import { useEditor } from "@/providers/editor/editor-provider";
 import clsx from "clsx";
@@ -8,11 +9,6 @@ import type React from "react";
 import { useCallback, useEffect, useMemo } from "react";
 import Recursive from "./funnel-editor-components/recursive";
 
-const TOGGLE_LIVE_MODE = "TOGGLE_LIVE_MODE";
-const LOAD_DATA = "LOAD_DATA";
-const CHANGE_CLICKED_ELEMENT = "CHANGE_CLICKED_ELEMENT";
-const TOGGLE_PREVIEW_MODE = "TOGGLE_PREVIEW_MODE";
-
 type Props = { funnelPageId: string; liveMode?: boolean };
 
 const FunnelEditor = ({ funnelPageId, liveMode = false }: Props) => {
@@ -20,14 +16,17 @@ const FunnelEditor = ({ funnelPageId, liveMode = false }: Props) => {
 
 	useEffect(() => {
 		if (liveMode) {
-			dispatch({ type: TOGGLE_LIVE_MODE, payload: { value: true } });
+			dispatch({
+				type: editorActionType.TOGGLE_LIVE_MODE,
+				payload: { value: true },
+			});
 		}
 
 		const fetchData = async () => {
 			const response = await getFunnelPageDetails(funnelPageId);
 			if (response) {
 				dispatch({
-					type: LOAD_DATA,
+					type: editorActionType.LOAD_DATA,
 					payload: {
 						elements: response.content ? JSON.parse(response.content) : [],
 						withLive: liveMode,
@@ -40,7 +39,8 @@ const FunnelEditor = ({ funnelPageId, liveMode = false }: Props) => {
 	}, [dispatch, funnelPageId, liveMode]);
 
 	const handleClick = useCallback(
-		() => dispatch({ type: CHANGE_CLICKED_ELEMENT, payload: {} }),
+		() =>
+			dispatch({ type: editorActionType.CHANGE_CLICKED_ELEMENT, payload: {} }),
 		[dispatch],
 	);
 
@@ -54,8 +54,8 @@ const FunnelEditor = ({ funnelPageId, liveMode = false }: Props) => {
 	);
 
 	const handleUnpreview = useCallback(() => {
-		dispatch({ type: TOGGLE_PREVIEW_MODE });
-		dispatch({ type: TOGGLE_LIVE_MODE });
+		dispatch({ type: editorActionType.TOGGLE_PREVIEW_MODE });
+		dispatch({ type: editorActionType.TOGGLE_LIVE_MODE });
 	}, [dispatch]);
 
 	const dynamicClasses = useMemo(

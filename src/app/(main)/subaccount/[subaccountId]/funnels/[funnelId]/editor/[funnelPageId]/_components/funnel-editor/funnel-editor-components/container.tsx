@@ -1,6 +1,10 @@
 "use client";
 import { Badge } from "@/components/ui/badge";
-import { type EditorBtns, defaultStyles } from "@/lib/constants";
+import {
+	type EditorBtns,
+	defaultStyles,
+	editorActionType,
+} from "@/lib/constants";
 import {
 	type EditorElement,
 	useEditor,
@@ -24,7 +28,7 @@ const Container = ({ element }: Props) => {
 		switch (componentType) {
 			case "text":
 				dispatch({
-					type: "ADD_ELEMENT",
+					type: editorActionType.ADD_ELEMENT,
 					payload: {
 						containerId: id,
 						elementDetails: {
@@ -42,7 +46,7 @@ const Container = ({ element }: Props) => {
 				break;
 			case "link":
 				dispatch({
-					type: "ADD_ELEMENT",
+					type: editorActionType.ADD_ELEMENT,
 					payload: {
 						containerId: id,
 						elementDetails: {
@@ -63,7 +67,7 @@ const Container = ({ element }: Props) => {
 				break;
 			case "video":
 				dispatch({
-					type: "ADD_ELEMENT",
+					type: editorActionType.ADD_ELEMENT,
 					payload: {
 						containerId: id,
 						elementDetails: {
@@ -80,7 +84,7 @@ const Container = ({ element }: Props) => {
 				break;
 			case "container":
 				dispatch({
-					type: "ADD_ELEMENT",
+					type: editorActionType.ADD_ELEMENT,
 					payload: {
 						containerId: id,
 						elementDetails: {
@@ -95,7 +99,7 @@ const Container = ({ element }: Props) => {
 				break;
 			case "contactForm":
 				dispatch({
-					type: "ADD_ELEMENT",
+					type: editorActionType.ADD_ELEMENT,
 					payload: {
 						containerId: id,
 						elementDetails: {
@@ -110,7 +114,7 @@ const Container = ({ element }: Props) => {
 				break;
 			case "paymentForm":
 				dispatch({
-					type: "ADD_ELEMENT",
+					type: editorActionType.ADD_ELEMENT,
 					payload: {
 						containerId: id,
 						elementDetails: {
@@ -125,7 +129,7 @@ const Container = ({ element }: Props) => {
 				break;
 			case "2Col":
 				dispatch({
-					type: "ADD_ELEMENT",
+					type: editorActionType.ADD_ELEMENT,
 					payload: {
 						containerId: id,
 						elementDetails: {
@@ -168,7 +172,7 @@ const Container = ({ element }: Props) => {
 	const handleOnClickBody = (e: React.MouseEvent) => {
 		e.stopPropagation();
 		dispatch({
-			type: "CHANGE_CLICKED_ELEMENT",
+			type: editorActionType.CHANGE_CLICKED_ELEMENT,
 			payload: {
 				elementDetails: element,
 			},
@@ -177,7 +181,7 @@ const Container = ({ element }: Props) => {
 
 	const handleDeleteElement = () => {
 		dispatch({
-			type: "DELETE_ELEMENT",
+			type: editorActionType.DELETE_ELEMENT,
 			payload: {
 				elementDetails: element,
 			},
