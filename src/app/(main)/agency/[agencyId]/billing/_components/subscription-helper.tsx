@@ -4,7 +4,7 @@ import CustomModal from "@/components/global/custom-modal";
 import type { PricesList } from "@/lib/types";
 import { useModal } from "@/providers/modal-provider";
 import { useSearchParams } from "next/navigation";
-import React, { useEffect } from "react";
+import { useEffect } from "react";
 
 type Props = {
 	prices: PricesList["data"];

@@ -1,6 +1,6 @@
 import { ClerkProvider } from "@clerk/nextjs";
-import type React from "react";
 import { dark } from "@clerk/themes";
+import type React from "react";
 
 const Layout = ({ children }: { children: React.ReactNode }) => {
 	return (

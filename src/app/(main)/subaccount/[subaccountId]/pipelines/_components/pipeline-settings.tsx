@@ -1,9 +1,5 @@
 "use client";
-import React from "react";
-import PipelineInfobar from "./pipeline-infobar";
-import type { Pipeline } from "@prisma/client";
 import CreatePipelineForm from "@/components/forms/create-pipeline-form";
-import { Button } from "@/components/ui/button";
 import {
 	AlertDialog,
 	AlertDialogAction,
@@ -15,8 +11,10 @@ import {
 	AlertDialogTitle,
 	AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
-import { deletePipeline } from "@/lib/queries";
+import { Button } from "@/components/ui/button";
 import { toast } from "@/components/ui/use-toast";
+import { deletePipeline } from "@/lib/queries";
+import type { Pipeline } from "@prisma/client";
 import { useRouter } from "next/navigation";
 
 const PipelineSettings = ({

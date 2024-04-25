@@ -13,7 +13,6 @@ import {
 import type { PricesList } from "@/lib/types";
 import { useModal } from "@/providers/modal-provider";
 import { useSearchParams } from "next/navigation";
-import React from "react";
 
 type Props = {
 	features: string[];

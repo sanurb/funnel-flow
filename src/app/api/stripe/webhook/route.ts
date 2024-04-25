@@ -1,8 +1,8 @@
-import { type NextRequest, NextResponse } from "next/server";
-import { headers } from "next/headers";
-import type Stripe from "stripe";
 import { stripe } from "@/lib/stripe";
 import { subscriptionCreated } from "@/lib/stripe/stripe-actions";
+import { headers } from "next/headers";
+import { type NextRequest, NextResponse } from "next/server";
+import type Stripe from "stripe";
 
 const stripeWebhookEvents = new Set([
 	"product.created",

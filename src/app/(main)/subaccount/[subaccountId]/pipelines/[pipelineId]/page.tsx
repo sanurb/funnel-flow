@@ -8,7 +8,6 @@ import {
 } from "@/lib/queries";
 import type { LaneDetail } from "@/lib/types";
 import { redirect } from "next/navigation";
-import React from "react";
 import PipelineInfoBar from "../_components/pipeline-infobar";
 import PipelineSettings from "../_components/pipeline-settings";
 import PipelineView from "../_components/pipeline-view";

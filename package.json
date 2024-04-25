@@ -9,7 +9,10 @@
     "lint": "biome check .",
     "lint.perf": "npx oxlint -D perf",
     "postinstall": "prisma generate",
-    "test": "vitest"
+    "test": "vitest",
+    "check": "biome check ./src",
+    "check.apply": "biome check ./src --apply",
+    "rage": "biome rage"
   },
   "dependencies": {
     "@clerk/nextjs": "^4.29.7",

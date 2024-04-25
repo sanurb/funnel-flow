@@ -3,7 +3,6 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { getFunnel } from "@/lib/queries";
 import Link from "next/link";
 import { redirect } from "next/navigation";
-import React from "react";
 import FunnelSettings from "./_components/funnel-settings";
 import FunnelSteps from "./_components/funnel-steps";
 

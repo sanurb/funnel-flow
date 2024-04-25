@@ -6,10 +6,10 @@ import {
 	useEditor,
 } from "@/providers/editor/editor-provider";
 import clsx from "clsx";
+import { Trash } from "lucide-react";
 import type React from "react";
 import { v4 } from "uuid";
 import Recursive from "./recursive";
-import { Trash } from "lucide-react";
 
 type Props = { element: EditorElement };
 

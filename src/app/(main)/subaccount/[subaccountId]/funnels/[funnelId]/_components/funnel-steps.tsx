@@ -10,16 +10,16 @@ import type { FunnelsForSubAccount } from "@/lib/types";
 import { useModal } from "@/providers/modal-provider";
 import type { FunnelPage } from "@prisma/client";
 import { Check, ExternalLink, LucideEdit } from "lucide-react";
-import React, { useState } from "react";
+import { useState } from "react";
 
+import FunnelPagePlaceholder from "@/components/icons/funnel-page-placeholder";
+import Link from "next/link";
 import {
 	DragDropContext,
 	type DragStart,
 	type DropResult,
 	Droppable,
 } from "react-beautiful-dnd";
-import Link from "next/link";
-import FunnelPagePlaceholder from "@/components/icons/funnel-page-placeholder";
 
 import {
 	Card,
