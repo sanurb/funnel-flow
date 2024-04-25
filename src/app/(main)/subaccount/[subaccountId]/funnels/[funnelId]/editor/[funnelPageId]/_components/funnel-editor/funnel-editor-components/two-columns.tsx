@@ -7,7 +7,11 @@ import type React from 'react';
 import RecursiveElement from './recursive';
 
 import {Badge} from '@/components/ui/badge';
-import {type EditorBtns, defaultStyles} from '@/lib/constants';
+import {
+    type EditorBtns,
+    defaultStyles,
+    editorActionType
+} from '@/lib/constants';
 import clsx from 'clsx';
 import {useMemo} from 'react';
 import {v4} from 'uuid';
@@ -16,8 +20,6 @@ const TYPE_BODY = '__body';
 const TYPE_CONTAINER = 'container';
 const TYPE_TEXT = 'text';
 const TYPE_2COL = '2Col';
-const ACTION_ADD_ELEMENT = 'ADD_ELEMENT';
-const ACTION_CHANGE_CLICKED_ELEMENT = 'CHANGE_CLICKED_ELEMENT';
 
 const elementConfig = {
     [TYPE_TEXT]: {
@@ -66,7 +68,7 @@ const TwoColumns = ({element}: Props) => {
         };
 
         dispatch({
-            type: ACTION_ADD_ELEMENT,
+            type: editorActionType.ADD_ELEMENT,
             payload: {
                 containerId: id,
                 elementDetails: elementDetails
@@ -81,7 +83,7 @@ const TwoColumns = ({element}: Props) => {
     const handleOnClickBody = (e: React.MouseEvent<HTMLDivElement>) => {
         e.stopPropagation();
         dispatch({
-            type: ACTION_CHANGE_CLICKED_ELEMENT,
+            type: editorActionType.CHANGE_CLICKED_ELEMENT,
             payload: {elementDetails: element}
         });
     };
