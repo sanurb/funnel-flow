@@ -102,6 +102,19 @@ const SettingsTab = () => {
 								/>
 							</div>
 						)}
+
+					{state.editor.selectedElement.type === "video" &&
+						!Array.isArray(state.editor.selectedElement.content) && (
+							<div className="flex flex-col gap-2">
+								<p className="text-muted-foreground">Video URL</p>
+								<Input
+									id="src"
+									placeholder="https://www.youtube.com/embed/XZY"
+									onChange={handleChangeCustomValues}
+									value={state.editor.selectedElement.content.src || ""}
+								/>
+							</div>
+						)}
 				</AccordionContent>
 			</AccordionItem>
 			<AccordionItem value="Typography" className="px-6 py-0  border-y-[1px]">
