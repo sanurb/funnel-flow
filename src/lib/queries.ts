@@ -587,7 +587,7 @@ export const sendInvitation = async (
 	});
 
 	try {
-		const invitation = await clerkClient.invitations.createInvitation({
+		const _invitation = await clerkClient.invitations.createInvitation({
 			emailAddress: email,
 			redirectUrl: process.env.NEXT_PUBLIC_URL,
 			publicMetadata: {
