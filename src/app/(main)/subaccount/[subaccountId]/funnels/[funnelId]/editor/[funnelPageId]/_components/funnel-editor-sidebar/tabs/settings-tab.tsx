@@ -18,8 +18,15 @@ import {
 } from "@/components/ui/select";
 import { Slider } from "@/components/ui/slider";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import {
+	Tooltip,
+	TooltipContent,
+	TooltipProvider,
+	TooltipTrigger,
+} from "@/components/ui/tooltip";
 import { editorActionType } from "@/lib/constants";
 import { useEditor } from "@/providers/editor/editor-provider";
+import { InfoIcon } from "lucide-react";
 import {
 	AlignCenter,
 	AlignHorizontalJustifyCenterIcon,
@@ -106,7 +113,26 @@ const SettingsTab = () => {
 					{state.editor.selectedElement.type === "video" &&
 						!Array.isArray(state.editor.selectedElement.content) && (
 							<div className="flex flex-col gap-2">
-								<p className="text-muted-foreground">Video URL</p>
+								<div className="flex items-center gap-2">
+									<p className="text-muted-foreground">Video URL</p>
+									<TooltipProvider>
+										<Tooltip>
+											<TooltipTrigger asChild>
+												<div>
+													<InfoIcon
+														className="text-muted-foreground transition duration-300 ease-in-out hover:brightness-150"
+														size={16}
+													/>
+												</div>
+											</TooltipTrigger>
+											<TooltipContent align="start">
+												<div className="p-2 shadow-lg rounded">
+													<p>Enter an embedded URL</p>
+												</div>
+											</TooltipContent>
+										</Tooltip>
+									</TooltipProvider>
+								</div>
 								<Input
 									id="src"
 									placeholder="https://www.youtube.com/embed/XZY"
