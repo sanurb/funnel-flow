@@ -237,6 +237,9 @@ export const editorActionType = {
 	SET_FUNNELPAGE_ID: "SET_FUNNELPAGE_ID",
 } as const;
 
+export type EditorActionType =
+	(typeof editorActionType)[keyof typeof editorActionType];
+
 export const defaultStyles: React.CSSProperties = {
 	backgroundPosition: "center",
 	objectFit: "cover",

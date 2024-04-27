@@ -4,6 +4,18 @@ import type { FunnelPage } from "@prisma/client";
 import { type Dispatch, createContext, useContext, useReducer } from "react";
 import type { EditorAction } from "./editor-actions";
 
+export type ActionHandler = {
+	[K in EditorAction["type"]]: (
+		state: EditorState,
+		action: Extract<EditorAction, { type: K }>,
+	) => EditorState;
+};
+
+export type EditorStateHandler = (
+	state: EditorState,
+	action: EditorAction,
+) => EditorState;
+
 export type DeviceTypes = "Desktop" | "Mobile" | "Tablet";
 
 export type EditorElement = {
@@ -78,23 +90,45 @@ const addAnElement = (
 		);
 	}
 
-	const elements = [...editorArray];
-	const queue = [...elements];
+	function addElementRecursively(
+		elements: EditorElement[],
+		containerId: string,
+		elementDetails: EditorElement,
+	): EditorElement[] {
+		let found = false;
 
-	while (queue.length > 0) {
-		const current = queue.shift();
-		if (
-			current?.id === action.payload.containerId &&
-			Array.isArray(current.content)
-		) {
-			current.content = [...current.content, action.payload.elementDetails];
-			return elements;
-		}
-		if (Array.isArray(current?.content)) {
-			queue.push(...current.content);
-		}
+		const updatedElements = elements.map((element) => {
+			if (found) {
+				return element;
+			}
+			if (element.id === containerId && Array.isArray(element.content)) {
+				found = true;
+				return {
+					...element,
+					content: [...element.content, elementDetails],
+				};
+			}
+			if (element.content && Array.isArray(element.content)) {
+				return {
+					...element,
+					content: addElementRecursively(
+						element.content,
+						containerId,
+						elementDetails,
+					),
+				};
+			}
+			return element;
+		});
+
+		return updatedElements;
 	}
-	throw new Error("Container not found");
+
+	return addElementRecursively(
+		editorArray,
+		action.payload.containerId,
+		action.payload.elementDetails,
+	);
 };
 
 const updateAnElement = (
@@ -135,227 +169,224 @@ const deleteAnElement = (
 	});
 };
 
-const editorReducer = (
-	state: EditorState = initialState,
-	action: EditorAction,
-): EditorState => {
-	switch (action.type) {
-		case editorActionType.ADD_ELEMENT: {
-			const updatedEditorState = {
-				...state.editor,
-				elements: addAnElement(state.editor.elements, action),
-			};
-			const updatedHistory = [
-				...state.history.history.slice(0, state.history.currentIndex + 1),
-				{ ...updatedEditorState },
-			];
+const actionHandlers: ActionHandler = {
+	[editorActionType.ADD_ELEMENT]: (state, action) => {
+		const updatedEditorState = {
+			...state.editor,
+			elements: addAnElement(state.editor.elements, action),
+		};
+		const updatedHistory = [
+			...state.history.history.slice(0, state.history.currentIndex + 1),
+			{ ...updatedEditorState },
+		];
 
-			const newEditorState = {
-				...state,
-				editor: updatedEditorState,
-				history: {
-					...state.history,
-					history: updatedHistory,
-					currentIndex: updatedHistory.length - 1,
-				},
-			};
+		return {
+			...state,
+			editor: updatedEditorState,
+			history: {
+				...state.history,
+				history: updatedHistory,
+				currentIndex: updatedHistory.length - 1,
+			},
+		};
+	},
 
-			return newEditorState;
-		}
+	[editorActionType.UPDATE_ELEMENT]: (state, action) => {
+		const updatedElements = updateAnElement(state.editor.elements, action);
+		const UpdatedElementIsSelected =
+			state.editor.selectedElement.id === action.payload.elementDetails.id;
 
-		case editorActionType.UPDATE_ELEMENT: {
-			const updatedElements = updateAnElement(state.editor.elements, action);
-
-			const UpdatedElementIsSelected =
-				state.editor.selectedElement.id === action.payload.elementDetails.id;
-
-			const updatedEditorStateWithUpdate = {
-				...state.editor,
-				elements: updatedElements,
-				selectedElement: UpdatedElementIsSelected
-					? action.payload.elementDetails
-					: {
-							id: "",
-							content: [],
-							name: "",
-							styles: {},
-							type: null,
-						},
-			};
-
-			const updatedHistoryWithUpdate = [
-				...state.history.history.slice(0, state.history.currentIndex + 1),
-				{ ...updatedEditorStateWithUpdate }, // Save a copy of the updated state
-			];
-			const updatedEditor = {
-				...state,
-				editor: updatedEditorStateWithUpdate,
-				history: {
-					...state.history,
-					history: updatedHistoryWithUpdate,
-					currentIndex: updatedHistoryWithUpdate.length - 1,
-				},
-			};
-			return updatedEditor;
-		}
-
-		case editorActionType.DELETE_ELEMENT: {
-			// Perform your logic to delete the element from the state
-			const updatedElementsAfterDelete = deleteAnElement(
-				state.editor.elements,
-				action,
-			);
-			const updatedEditorStateAfterDelete = {
-				...state.editor,
-				elements: updatedElementsAfterDelete,
-			};
-			const updatedHistoryAfterDelete = [
-				...state.history.history.slice(0, state.history.currentIndex + 1),
-				{ ...updatedEditorStateAfterDelete }, // Save a copy of the updated state
-			];
-
-			const deletedState = {
-				...state,
-				editor: updatedEditorStateAfterDelete,
-				history: {
-					...state.history,
-					history: updatedHistoryAfterDelete,
-					currentIndex: updatedHistoryAfterDelete.length - 1,
-				},
-			};
-			return deletedState;
-		}
-
-		case editorActionType.CHANGE_CLICKED_ELEMENT: {
-			const clickedState = {
-				...state,
-				editor: {
-					...state.editor,
-					selectedElement: action.payload.elementDetails || {
+		const updatedEditorState = {
+			...state.editor,
+			elements: updatedElements,
+			selectedElement: UpdatedElementIsSelected
+				? action.payload.elementDetails
+				: {
 						id: "",
 						content: [],
 						name: "",
 						styles: {},
 						type: null,
 					},
-				},
-				history: {
-					...state.history,
-					history: [
-						...state.history.history.slice(0, state.history.currentIndex + 1),
-						{ ...state.editor }, // Save a copy of the current editor state
-					],
-					currentIndex: state.history.currentIndex + 1,
-				},
-			};
-			return clickedState;
-		}
-		case editorActionType.CHANGE_DEVICE: {
-			const changedDeviceState = {
-				...state,
-				editor: {
-					...state.editor,
-					device: action.payload.device,
-				},
-			};
-			return changedDeviceState;
-		}
+		};
 
-		case editorActionType.TOGGLE_PREVIEW_MODE: {
-			const toggleState = {
-				...state,
-				editor: {
-					...state.editor,
-					previewMode: !state.editor.previewMode,
-				},
-			};
-			return toggleState;
-		}
+		const updatedHistory = [
+			...state.history.history.slice(0, state.history.currentIndex + 1),
+			{ ...updatedEditorState },
+		];
 
-		case editorActionType.TOGGLE_LIVE_MODE: {
-			const toggleLiveMode: EditorState = {
-				...state,
-				editor: {
-					...state.editor,
-					liveMode: action.payload
-						? action.payload.value
-						: !state.editor.liveMode,
-				},
-			};
-			return toggleLiveMode;
-		}
+		return {
+			...state,
+			editor: updatedEditorState,
+			history: {
+				...state.history,
+				history: updatedHistory,
+				currentIndex: updatedHistory.length - 1,
+			},
+		};
+	},
 
-		case editorActionType.REDO:
-			if (state.history.currentIndex < state.history.history.length - 1) {
-				const nextIndex = state.history.currentIndex + 1;
-				const nextEditorState = { ...state.history.history[nextIndex] };
-				const redoState = {
-					...state,
-					editor: nextEditorState,
-					history: {
-						...state.history,
-						currentIndex: nextIndex,
-					},
-				};
-				return redoState;
-			}
-			return state;
+	[editorActionType.DELETE_ELEMENT]: (state, action) => {
+		const updatedElements = deleteAnElement(state.editor.elements, action);
+		const updatedEditorState = {
+			...state.editor,
+			elements: updatedElements,
+		};
+		const updatedHistory = [
+			...state.history.history.slice(0, state.history.currentIndex + 1),
+			{ ...updatedEditorState },
+		];
 
-		case editorActionType.UNDO:
-			if (state.history.currentIndex > 0) {
-				const prevIndex = state.history.currentIndex - 1;
-				const prevEditorState = { ...state.history.history[prevIndex] };
-				const undoState = {
-					...state,
-					editor: prevEditorState,
-					history: {
-						...state.history,
-						currentIndex: prevIndex,
-					},
-				};
-				return undoState;
-			}
-			return state;
+		return {
+			...state,
+			editor: updatedEditorState,
+			history: {
+				...state.history,
+				history: updatedHistory,
+				currentIndex: updatedHistory.length - 1,
+			},
+		};
+	},
 
-		case editorActionType.LOAD_DATA:
-			return {
-				...initialState,
-				editor: {
-					...initialState.editor,
-					elements: action.payload.elements || initialEditorState.elements,
-					liveMode: !!action.payload.withLive,
-				},
-			};
-
-		case editorActionType.SET_FUNNELPAGE_ID: {
-			const { funnelPageId } = action.payload;
-			const updatedEditorStateWithFunnelPageId = {
+	[editorActionType.CHANGE_CLICKED_ELEMENT]: (state, action) => {
+		const clickedState = {
+			...state,
+			editor: {
 				...state.editor,
-				funnelPageId,
-			};
+				selectedElement: action.payload.elementDetails || {
+					id: "",
+					content: [],
+					name: "",
+					styles: {},
+					type: null,
+				},
+			},
+			history: {
+				...state.history,
+				history: [
+					...state.history.history.slice(0, state.history.currentIndex + 1),
+					{ ...state.editor }, // Save a copy of the current editor state
+				],
+				currentIndex: state.history.currentIndex + 1,
+			},
+		};
+		return clickedState;
+	},
 
-			const updatedHistoryWithFunnelPageId = [
-				...state.history.history.slice(0, state.history.currentIndex + 1),
-				{ ...updatedEditorStateWithFunnelPageId }, // Save a copy of the updated state
-			];
+	[editorActionType.CHANGE_DEVICE]: (state, action) => {
+		const changedDeviceState = {
+			...state,
+			editor: {
+				...state.editor,
+				device: action.payload.device,
+			},
+		};
+		return changedDeviceState;
+	},
 
-			const funnelPageIdState = {
+	[editorActionType.TOGGLE_PREVIEW_MODE]: (state, _action) => {
+		const toggleState = {
+			...state,
+			editor: {
+				...state.editor,
+				previewMode: !state.editor.previewMode,
+			},
+		};
+		return toggleState;
+	},
+
+	[editorActionType.TOGGLE_LIVE_MODE]: (state, action) => {
+		const toggleLiveMode = {
+			...state,
+			editor: {
+				...state.editor,
+				liveMode: action.payload
+					? action.payload.value
+					: !state.editor.liveMode,
+			},
+		};
+		return toggleLiveMode;
+	},
+
+	[editorActionType.REDO]: (state, _action) => {
+		if (state.history.currentIndex < state.history.history.length - 1) {
+			const nextIndex = state.history.currentIndex + 1;
+			const nextEditorState = { ...state.history.history[nextIndex] };
+			const redoState = {
 				...state,
-				editor: updatedEditorStateWithFunnelPageId,
+				editor: nextEditorState,
 				history: {
 					...state.history,
-					history: updatedHistoryWithFunnelPageId,
-					currentIndex: updatedHistoryWithFunnelPageId.length - 1,
+					currentIndex: nextIndex,
 				},
 			};
-			return funnelPageIdState;
+			return redoState;
 		}
+		return state;
+	},
 
-		default:
-			return state;
-	}
+	[editorActionType.UNDO]: (state, _action) => {
+		if (state.history.currentIndex > 0) {
+			const prevIndex = state.history.currentIndex - 1;
+			const prevEditorState = { ...state.history.history[prevIndex] };
+			const undoState = {
+				...state,
+				editor: prevEditorState,
+				history: {
+					...state.history,
+					currentIndex: prevIndex,
+				},
+			};
+			return undoState;
+		}
+		return state;
+	},
+
+	[editorActionType.LOAD_DATA]: (_state, action) => {
+		return {
+			...initialState,
+			editor: {
+				...initialState.editor,
+				elements: action.payload.elements || initialEditorState.elements,
+				liveMode: !!action.payload.withLive,
+			},
+		};
+	},
+
+	[editorActionType.SET_FUNNELPAGE_ID]: (state, action) => {
+		const { funnelPageId } = action.payload;
+		const updatedEditorState = {
+			...state.editor,
+			funnelPageId,
+		};
+		const updatedHistory = [
+			...state.history.history.slice(0, state.history.currentIndex + 1),
+			{ ...updatedEditorState },
+		];
+
+		return {
+			...state,
+			editor: updatedEditorState,
+			history: {
+				...state.history,
+				history: updatedHistory,
+				currentIndex: updatedHistory.length - 1,
+			},
+		};
+	},
 };
 
+const editorReducer = (
+	// biome-ignore lint/style/useDefaultParameterLast: <explanation>
+	state: EditorState = initialState,
+	action: EditorAction,
+): EditorState => {
+	const handleAction = actionHandlers[action.type];
+	if (handleAction) {
+		return handleAction(state, action);
+	}
+	return state;
+};
 export type EditorContextData = {
 	device: DeviceTypes;
 	previewMode: boolean;
