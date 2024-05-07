@@ -8,6 +8,8 @@ import {
 	CardTitle,
 } from "@/components/ui/card";
 import { db } from "@/lib/db";
+import { stripe } from "@/lib/stripe";
+import { getStripeOAuthLink } from "@/lib/utils";
 import { CheckCircleIcon } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
@@ -41,9 +43,30 @@ const LaunchPad = async ({ params, searchParams }: Props) => {
 		subaccountDetails.name &&
 		subaccountDetails.state;
 
-	const connectedStripeAccount = false;
+	const stripeOAuthLink = getStripeOAuthLink(
+		"subaccount",
+		`launchpad___${subaccountDetails.id}`,
+	);
 
-	// TODO: Check if stripe account is connected
+	let connectedStripeAccount = false;
+
+	if (searchParams.code) {
+		if (!subaccountDetails.connectAccountId) {
+			try {
+				const response = await stripe.oauth.token({
+					grant_type: "authorization_code",
+					code: searchParams.code,
+				});
+				await db.subAccount.update({
+					where: { id: params.subaccountId },
+					data: { connectAccountId: response.stripe_user_id },
+				});
+				connectedStripeAccount = true;
+			} catch (error) {
+				console.log("🔴 Could not connect stripe account", error);
+			}
+		}
+	}
 
 	return (
 		<BlurPage>
@@ -66,7 +89,7 @@ const LaunchPad = async ({ params, searchParams }: Props) => {
 										width={80}
 										className="rounded-md object-contain"
 									/>
-									<p>Save the website as a shortcut on your mobile device</p>
+									<p>Save the website as a shortcut on your mobile devide</p>
 								</div>
 								<Button>Start</Button>
 							</div>
@@ -93,7 +116,7 @@ const LaunchPad = async ({ params, searchParams }: Props) => {
 								) : (
 									<Link
 										className="bg-primary py-2 px-4 rounded-md text-white"
-										href="#"
+										href={stripeOAuthLink}
 									>
 										Start
 									</Link>
