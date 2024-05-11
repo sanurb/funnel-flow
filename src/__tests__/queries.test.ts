@@ -13,6 +13,9 @@ vi.mock("@/lib/db", () => ({
 			findUnique: vi.fn(),
 			create: vi.fn(),
 		},
+		invitation: {
+			findUnique: vi.fn(),
+		},
 	},
 }));
 
@@ -105,3 +108,5 @@ describe("createTeamUser", () => {
 		expect(db.user.create).not.toHaveBeenCalled();
 	});
 });
+
+// TODO: Add tests for verifyAndAcceptInvitation
