@@ -109,4 +109,24 @@ describe("createTeamUser", () => {
 	});
 });
 
-// TODO: Add tests for verifyAndAcceptInvitation
+describe("verifyAndAcceptInvitation", () => {
+	beforeEach(() => {
+		vi.resetAllMocks();
+	});
+
+	it("returns the agency ID if no pending invitation exists", async () => {
+		const mockUser = {
+			id: "123",
+			emailAddresses: [{ emailAddress: "test@example.com" }],
+		};
+		vi.mocked(currentUser).mockResolvedValue(mockUser);
+		vi.mocked(db.invitation.findUnique).mockResolvedValue(null);
+		vi.mocked(db.user.findUnique).mockResolvedValue({
+			agencyId: "agency1",
+		});
+
+		const result = await verifyAndAcceptInvitation();
+
+		expect(result).toEqual("agency1");
+	});
+});
