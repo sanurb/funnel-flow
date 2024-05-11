@@ -1,5 +1,5 @@
 import { db } from "@/lib/db";
-import { getAuthUserDetails } from "@/lib/queries";
+import { createTeamUser, getAuthUserDetails } from "@/lib/queries";
 import { currentUser } from "@clerk/nextjs";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
@@ -11,6 +11,7 @@ vi.mock("@/lib/db", () => ({
 	db: {
 		user: {
 			findUnique: vi.fn(),
+			create: vi.fn(),
 		},
 	},
 }));
@@ -64,5 +65,43 @@ describe("getAuthUserDetails", () => {
 		const result = await getAuthUserDetails();
 
 		expect(result).toBeUndefined();
+	});
+});
+
+describe("createTeamUser", () => {
+	beforeEach(() => {
+		vi.resetAllMocks();
+	});
+
+	it("creates a team user successfully when role is not AGENCY_OWNER", async () => {
+		const mockUser = {
+			id: "124",
+			email: "newuser@example.com",
+			agencyId: "agency1",
+			role: "SUBACCOUNT_USER",
+			createdAt: new Date(),
+			updatedAt: new Date(),
+		};
+
+		vi.mocked(db.user.create).mockResolvedValue(mockUser);
+
+		const result = await createTeamUser("agency1", mockUser);
+
+		expect(result).toEqual(mockUser);
+		expect(db.user.create).toHaveBeenCalledWith({ data: mockUser });
+	});
+
+	it("returns null if the user role is AGENCY_OWNER", async () => {
+		const mockUser = {
+			id: "125",
+			email: "owner@example.com",
+			agencyId: "agency1",
+			role: "AGENCY_OWNER",
+		};
+
+		const result = await createTeamUser("agency1", mockUser);
+
+		expect(result).toBeNull();
+		expect(db.user.create).not.toHaveBeenCalled();
 	});
 });
