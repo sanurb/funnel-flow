@@ -107,6 +107,30 @@ const SettingsTab = () => {
 									onChange={handleChangeCustomValues}
 									value={state.editor.selectedElement.content.href}
 								/>
+
+								<p className="text-muted-foreground">Select target</p>
+								<Select
+									onValueChange={(e) =>
+										handleChangeCustomValues({
+											target: {
+												id: "target",
+												value: e,
+											},
+										})
+									}
+									value={state.editor.selectedElement.content.target}
+								>
+									<SelectTrigger>
+										<SelectValue placeholder="Select a target" />
+									</SelectTrigger>
+									<SelectContent>
+										<SelectGroup>
+											<SelectLabel>Targets</SelectLabel>
+											<SelectItem value="_blank">New Tab</SelectItem>
+											<SelectItem value="_self">Same Tab</SelectItem>
+										</SelectGroup>
+									</SelectContent>
+								</Select>
 							</div>
 						)}
 

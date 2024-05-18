@@ -1,7 +1,5 @@
-"use client";
 import { Badge } from "@/components/ui/badge";
 import { type EditorBtns, editorActionType } from "@/lib/constants";
-
 import {
 	type EditorElement,
 	useEditor,
@@ -9,7 +7,6 @@ import {
 import clsx from "clsx";
 import { Trash } from "lucide-react";
 import Link from "next/link";
-
 import type React from "react";
 import { useCallback } from "react";
 
@@ -17,7 +14,7 @@ type Props = {
 	element: EditorElement;
 };
 
-const LinkComponent = (props: Props) => {
+const LinkComponent = ({ element }: Props) => {
 	const { dispatch, state } = useEditor();
 
 	const handleDragStart = useCallback(
@@ -33,22 +30,22 @@ const LinkComponent = (props: Props) => {
 			e.stopPropagation();
 			dispatch({
 				type: editorActionType.CHANGE_CLICKED_ELEMENT,
-				payload: { elementDetails: props.element },
+				payload: { elementDetails: element },
 			});
 		},
-		[dispatch, props.element],
+		[dispatch, element],
 	);
 
 	const handleDeleteElement = useCallback(() => {
 		dispatch({
 			type: editorActionType.DELETE_ELEMENT,
-			payload: { elementDetails: props.element },
+			payload: { elementDetails: element },
 		});
-	}, [dispatch, props.element]);
+	}, [dispatch, element]);
 
 	const renderBadge = () => {
 		if (
-			state.editor.selectedElement.id === props.element.id &&
+			state.editor.selectedElement.id === element.id &&
 			!state.editor.liveMode
 		) {
 			return (
@@ -61,41 +58,46 @@ const LinkComponent = (props: Props) => {
 	};
 
 	const renderContent = () => {
-		const { content } = props.element;
+		const { content } = element;
 		if (!Array.isArray(content)) {
 			if (state.editor?.previewMode || state.editor?.liveMode) {
-				return <Link href={content.href || "#"}>{content.innerText}</Link>;
-			} else if (!state.editor.previewMode && !state.editor.liveMode) {
 				return (
-					<span
-						contentEditable={!state.editor.liveMode}
-						onBlur={(e) => {
-							const spanElement = e.target as HTMLSpanElement;
-							dispatch({
-								type: editorActionType.UPDATE_ELEMENT,
-								payload: {
-									elementDetails: {
-										...props.element,
-										content: {
-											...content,
-											innerText: spanElement.innerText,
-										},
-									},
-								},
-							});
-						}}
-					>
+					<Link href={content.href || "#"} target={content.target}>
 						{content.innerText}
-					</span>
+					</Link>
 				);
 			}
+
+			return (
+				<span
+					className="focus:outline-none"
+					contentEditable={!state.editor.liveMode}
+					onBlur={(e) => {
+						const spanElement = e.target as HTMLSpanElement;
+						dispatch({
+							type: editorActionType.UPDATE_ELEMENT,
+							payload: {
+								elementDetails: {
+									...element,
+									content: {
+										...content,
+										innerText: spanElement.innerText,
+									},
+								},
+							},
+						});
+					}}
+				>
+					{content.innerText}
+				</span>
+			);
 		}
 		return null;
 	};
 
 	const renderDeleteIcon = () => {
 		if (
-			state.editor.selectedElement.id === props.element.id &&
+			state.editor.selectedElement.id === element.id &&
 			!state.editor.liveMode
 		) {
 			return (
@@ -114,15 +116,15 @@ const LinkComponent = (props: Props) => {
 	const elementClasses = clsx(
 		"p-[2px] w-full m-[5px] relative text-[16px] transition-all",
 		{
-			"!border-blue-500": state.editor.selectedElement.id === props.element.id,
-			"!border-solid": state.editor.selectedElement.id === props.element.id,
+			"!border-blue-500": state.editor.selectedElement.id === element.id,
+			"!border-solid": state.editor.selectedElement.id === element.id,
 			"border-dashed border-[1px] border-slate-300": !state.editor.liveMode,
 		},
 	);
 
 	return (
 		<div
-			style={props.element.styles}
+			style={element.styles}
 			draggable
 			onDragStart={(e) => handleDragStart(e, "text")}
 			onClick={handleOnClickBody}
