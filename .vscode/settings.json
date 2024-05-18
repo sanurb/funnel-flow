@@ -4,6 +4,9 @@
 		"quickfix.biome": "explicit",
 		"source.organizeImports.biome": "explicit"
 	},
+	"files.associations": {
+		"*.css": "tailwindcss"
+	},
 	"editor.formatOnSave": true,
 	"editor.defaultFormatter": "biomejs.biome",
 	"[javascript]": {
