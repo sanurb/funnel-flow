@@ -382,8 +382,10 @@ const editorReducer = (
 	action: EditorAction,
 ): EditorState => {
 	const handleAction = actionHandlers[action.type];
+	// biome-ignore lint/suspicious/noExplicitAny: <explanation>
+	const actions: any = action;
 	if (handleAction) {
-		return handleAction(state, action);
+		return handleAction(state, actions);
 	}
 	return state;
 };
