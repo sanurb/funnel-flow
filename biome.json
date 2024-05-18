@@ -1,0 +1,56 @@
+{
+  "$schema": "https://biomejs.dev/schemas/1.7.1/schema.json",
+  "organizeImports": {
+    "enabled": true
+  },
+  "linter": {
+    "enabled": true,
+    "rules": {
+      "recommended": true,
+      "suspicious": {
+        "noDoubleEquals": "warn",
+        "noAssignInExpressions": "warn"
+      },
+      "correctness": {
+        "noUnusedImports": "warn",
+        "noUnusedVariables": "error"
+      },
+      "style": {
+        "useAsConstAssertion": "warn"
+      }
+    }
+  },
+  "formatter": {
+    "enabled": true,
+    "formatWithErrors": false,
+    "indentStyle": "tab",
+    "indentWidth": 2
+  },
+  "files": {
+    "include": [
+      "src/**/*.ts",
+      "src/**/*.tsx",
+      "src/**/*.js",
+      "src/**/*.jsx",
+      "lib/**/*.ts",
+      "lib/**/*.tsx",
+      "lib/**/*.js",
+      "lib/**/*.jsx",
+      "./biome.json",
+      "./package.json",
+      "./tsconfig.json",
+      "./vite.config.ts"
+    ],
+    "ignore": [
+      "dist",
+      "build",
+      "bin",
+      "public",
+      ".next",
+      "bun.lockb",
+      "node_modules",
+      "**/node_modules/**"
+    ],
+    "ignoreUnknown": true
+  }
+}
