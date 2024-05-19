@@ -56,9 +56,8 @@ export const updateBackground: StyleUpdater = (styles, value) => {
 	};
 };
 
-export const defaultUpdater: StyleUpdater = (styles, value) => ({
+export const defaultUpdater: StyleUpdater = (styles) => ({
 	...styles,
-	[property]: value,
 });
 
 export const styleUpdaters: Record<string, StyleUpdater> = {
