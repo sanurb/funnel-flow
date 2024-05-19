@@ -26,10 +26,7 @@ import {
 	TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { editorActionType } from "@/lib/constants";
-import {
-	type EditorElement,
-	useEditor,
-} from "@/providers/editor/editor-provider";
+import { useEditor } from "@/providers/editor/editor-provider";
 import {
 	AlignCenter,
 	AlignHorizontalJustifyCenterIcon,
@@ -46,13 +43,10 @@ import {
 	InfoIcon,
 	LucideImageDown,
 } from "lucide-react";
-import { useState } from "react";
+import { updateElementStyles } from "./utils";
 
 const SettingsTab = () => {
 	const { state, dispatch } = useEditor();
-	const [background, setBackground] = useState(
-		state.editor.selectedElement.styles.background || "",
-	);
 
 	const handleOnChanges = (e: any) => {
 		const styleSettings = e.target.id;
@@ -94,90 +88,6 @@ const SettingsTab = () => {
 				},
 			},
 		});
-	};
-
-	const updateElementStyles = (
-		element: EditorElement,
-		property: string,
-		value: string,
-	): EditorElement => {
-		const isGradient = value.includes("gradient");
-		const isImage = value.startsWith("url");
-
-		let styles: React.CSSProperties = { ...element.styles };
-
-		const setGradientTextStyles = (bg: string) => ({
-			background: `${bg} text`,
-			WebkitTextFillColor: "transparent",
-			WebkitBackgroundClip: "text",
-		});
-
-		const unsetGradientTextStyles = () => ({
-			WebkitBackgroundClip: "unset",
-			WebkitTextFillColor: "unset",
-		});
-
-		if (property === "color") {
-			styles = {
-				...styles,
-				color: value,
-				...(isGradient
-					? {
-							...setGradientTextStyles(value),
-							backgroundColor: value,
-						}
-					: {
-							...unsetGradientTextStyles(),
-							backgroundColor: undefined,
-						}),
-			};
-			// Ensure background is unset if color is not a gradient
-			if (!isGradient) {
-				styles = {
-					...styles,
-					background: styles.backgroundColor || "unset",
-				};
-			}
-		} else if (property === "backgroundColor") {
-			styles = {
-				...styles,
-				backgroundColor: value,
-				...(isGradient || isImage
-					? {
-							background: value,
-							color: styles.color?.includes("gradient")
-								? "white"
-								: styles.color ?? "",
-						}
-					: { background: "unset" }),
-			};
-
-			if (!isGradient) {
-				styles = {
-					...styles,
-					...unsetGradientTextStyles(),
-				};
-			}
-		} else if (property === "background") {
-			styles = {
-				...styles,
-				background: value,
-				...(isGradient
-					? setGradientTextStyles(value)
-					: unsetGradientTextStyles()),
-				...(isImage ? unsetGradientTextStyles() : {}),
-			};
-		} else {
-			styles = {
-				...styles,
-				[property]: value,
-			};
-		}
-
-		return {
-			...element,
-			styles,
-		};
 	};
 
 	const handleGradientPickerChange = (property: string, value: string) => {
