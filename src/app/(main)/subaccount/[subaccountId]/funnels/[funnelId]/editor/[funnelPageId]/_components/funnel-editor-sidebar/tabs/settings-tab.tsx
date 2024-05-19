@@ -91,7 +91,6 @@ const SettingsTab = () => {
 	};
 
 	const handleGradientPickerChange = (property: string, value: string) => {
-		console.log("state: ", state.editor.selectedElement);
 		const updatedElement = updateElementStyles(
 			state.editor.selectedElement,
 			property,

@@ -5,6 +5,13 @@ export type StyleUpdater = (
 	value: string,
 ) => React.CSSProperties;
 
+/**
+ * Apply necessary styles to make text gradient effective.
+ * - `background`: Sets the background to the gradient.
+ * - `backgroundColor`: Ensures that the background color doesn't interfere with the gradient.
+ * - `WebkitTextFillColor`: Makes the text transparent so the background gradient is visible.
+ * - `WebkitBackgroundClip`: Clips the background to the text, ensuring the gradient only applies to the text.
+ */
 export const setGradientTextStyles = (bg: string) => ({
 	background: `${bg} text`,
 	backgroundColor: "transparent",
@@ -12,9 +19,16 @@ export const setGradientTextStyles = (bg: string) => ({
 	WebkitBackgroundClip: "text",
 });
 
+/**
+ * Remove styles related to text gradient.
+ * - `WebkitBackgroundClip`: Unsets the background clip to text.
+ * - `WebkitTextFillColor`: Restores the text fill color.
+ * - `backgroundImage`: Ensures that no background image is set.
+ */
 export const unsetGradientTextStyles = () => ({
 	WebkitBackgroundClip: "unset",
 	WebkitTextFillColor: "unset",
+	background: "unset",
 	backgroundImage: "none",
 });
 
@@ -36,9 +50,7 @@ export const updateBackgroundColor: StyleUpdater = (styles, value) => {
 		...(isGradient || isImage
 			? {
 					background: value,
-					color: styles.color?.includes("gradient")
-						? undefined
-						: styles.color ?? "",
+					color: styles.color?.includes("gradient") ? "" : styles.color ?? "",
 				}
 			: { background: "unset" }),
 		...(isGradient ? {} : unsetGradientTextStyles()),
