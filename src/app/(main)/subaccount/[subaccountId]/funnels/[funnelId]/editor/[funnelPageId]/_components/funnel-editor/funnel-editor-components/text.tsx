@@ -59,6 +59,7 @@ const TextComponent = (props: Props) => {
 			<span
 				className="focus:outline-none"
 				contentEditable={!state.editor.liveMode}
+				suppressContentEditableWarning={true}
 				onBlur={(e) => {
 					const spanElement = e.target as HTMLSpanElement;
 					dispatch({

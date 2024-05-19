@@ -5,6 +5,7 @@ import {
 	AccordionItem,
 	AccordionTrigger,
 } from "@/components/ui/accordion";
+import { GradientPicker } from "@/components/ui/gradient-picker";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import {
@@ -25,8 +26,10 @@ import {
 	TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { editorActionType } from "@/lib/constants";
-import { useEditor } from "@/providers/editor/editor-provider";
-import { InfoIcon } from "lucide-react";
+import {
+	type EditorElement,
+	useEditor,
+} from "@/providers/editor/editor-provider";
 import {
 	AlignCenter,
 	AlignHorizontalJustifyCenterIcon,
@@ -40,11 +43,16 @@ import {
 	AlignVerticalJustifyCenter,
 	AlignVerticalJustifyStart,
 	ChevronsLeftRightIcon,
+	InfoIcon,
 	LucideImageDown,
 } from "lucide-react";
+import { useState } from "react";
 
 const SettingsTab = () => {
 	const { state, dispatch } = useEditor();
+	const [background, setBackground] = useState(
+		state.editor.selectedElement.styles.background || "",
+	);
 
 	const handleOnChanges = (e: any) => {
 		const styleSettings = e.target.id;
@@ -84,6 +92,106 @@ const SettingsTab = () => {
 						...styleObject,
 					},
 				},
+			},
+		});
+	};
+
+	const updateElementStyles = (
+		element: EditorElement,
+		property: string,
+		value: string,
+	): EditorElement => {
+		const isGradient = value.includes("gradient");
+		const isImage = value.startsWith("url");
+
+		let styles: React.CSSProperties = { ...element.styles };
+
+		const setGradientTextStyles = (bg: string) => ({
+			background: `${bg} text`,
+			WebkitTextFillColor: "transparent",
+			WebkitBackgroundClip: "text",
+		});
+
+		const unsetGradientTextStyles = () => ({
+			WebkitBackgroundClip: "unset",
+			WebkitTextFillColor: "unset",
+		});
+
+		if (property === "color") {
+			styles = {
+				...styles,
+				color: value,
+				...(isGradient
+					? {
+							...setGradientTextStyles(value),
+							backgroundColor: value,
+						}
+					: {
+							...unsetGradientTextStyles(),
+							backgroundColor: undefined,
+						}),
+			};
+			// Ensure background is unset if color is not a gradient
+			if (!isGradient) {
+				styles = {
+					...styles,
+					background: styles.backgroundColor || "unset",
+				};
+			}
+		} else if (property === "backgroundColor") {
+			styles = {
+				...styles,
+				backgroundColor: value,
+				...(isGradient || isImage
+					? {
+							background: value,
+							color: styles.color?.includes("gradient")
+								? "white"
+								: styles.color ?? "",
+						}
+					: { background: "unset" }),
+			};
+
+			if (!isGradient) {
+				styles = {
+					...styles,
+					...unsetGradientTextStyles(),
+				};
+			}
+		} else if (property === "background") {
+			styles = {
+				...styles,
+				background: value,
+				...(isGradient
+					? setGradientTextStyles(value)
+					: unsetGradientTextStyles()),
+				...(isImage ? unsetGradientTextStyles() : {}),
+			};
+		} else {
+			styles = {
+				...styles,
+				[property]: value,
+			};
+		}
+
+		return {
+			...element,
+			styles,
+		};
+	};
+
+	const handleGradientPickerChange = (property: string, value: string) => {
+		console.log("state: ", state.editor.selectedElement);
+		const updatedElement = updateElementStyles(
+			state.editor.selectedElement,
+			property,
+			value,
+		);
+
+		dispatch({
+			type: editorActionType.UPDATE_ELEMENT,
+			payload: {
+				elementDetails: updatedElement,
 			},
 		});
 	};
@@ -227,10 +335,11 @@ const SettingsTab = () => {
 					</div>
 					<div className="flex flex-col gap-2">
 						<p className="text-muted-foreground">Color</p>
-						<Input
-							id="color"
-							onChange={handleOnChanges}
-							value={state.editor.selectedElement.styles.color}
+						<GradientPicker
+							background={state.editor.selectedElement.styles.color ?? ""}
+							setBackground={(color) =>
+								handleGradientPickerChange("color", color)
+							}
 						/>
 					</div>
 					<div className="flex gap-4">
@@ -474,22 +583,14 @@ const SettingsTab = () => {
 					</div>
 					<div className="flex flex-col gap-2">
 						<Label className="text-muted-foreground">Background Color</Label>
-						<div className="flex  border-[1px] rounded-md overflow-clip">
-							<div
-								className="w-12 "
-								style={{
-									backgroundColor:
-										state.editor.selectedElement.styles.backgroundColor,
-								}}
-							/>
-							<Input
-								placeholder="#HFI245"
-								className="!border-y-0 rounded-none !border-r-0 mr-2"
-								id="backgroundColor"
-								onChange={handleOnChanges}
-								value={state.editor.selectedElement.styles.backgroundColor}
-							/>
-						</div>
+						<GradientPicker
+							background={
+								state.editor.selectedElement.styles.backgroundColor ?? ""
+							}
+							setBackground={(color) =>
+								handleGradientPickerChange("backgroundColor", color)
+							}
+						/>
 					</div>
 					<div className="flex flex-col gap-2">
 						<Label className="text-muted-foreground">Background Image</Label>

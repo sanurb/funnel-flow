@@ -141,7 +141,9 @@ const updateAnElement = (
 	return editorArray.map((item) => {
 		if (item.id === action.payload.elementDetails.id) {
 			return { ...item, ...action.payload.elementDetails };
-		} else if (item.content && Array.isArray(item.content)) {
+		}
+
+		if (item.content && Array.isArray(item.content)) {
 			return {
 				...item,
 				content: updateAnElement(item.content, action),
@@ -162,7 +164,9 @@ const deleteAnElement = (
 	return editorArray.filter((item) => {
 		if (item.id === action.payload.elementDetails.id) {
 			return false;
-		} else if (item.content && Array.isArray(item.content)) {
+		}
+
+		if (item.content && Array.isArray(item.content)) {
 			item.content = deleteAnElement(item.content, action);
 		}
 		return true;

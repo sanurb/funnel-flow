@@ -49,7 +49,10 @@ const LinkComponent = ({ element }: Props) => {
 			!state.editor.liveMode
 		) {
 			return (
-				<Badge className="absolute -top-[23px] -left-[1px] rounded-none rounded-t-lg">
+				<Badge
+					className="absolute -top-[23px] -left-[1px] rounded-none rounded-t-lg"
+					style={{ WebkitTextFillColor: "initial" }}
+				>
 					{state.editor.selectedElement.name}
 				</Badge>
 			);
@@ -72,6 +75,7 @@ const LinkComponent = ({ element }: Props) => {
 				<span
 					className="focus:outline-none"
 					contentEditable={!state.editor.liveMode}
+					suppressContentEditableWarning={true}
 					onBlur={(e) => {
 						const spanElement = e.target as HTMLSpanElement;
 						dispatch({
@@ -123,6 +127,7 @@ const LinkComponent = ({ element }: Props) => {
 	);
 
 	return (
+		// biome-ignore lint/a11y/useKeyWithClickEvents: This is a draggable element
 		<div
 			style={element.styles}
 			draggable
