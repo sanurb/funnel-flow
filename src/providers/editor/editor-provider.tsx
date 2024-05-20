@@ -35,6 +35,9 @@ export type Editor = {
 	device: DeviceTypes;
 	previewMode: boolean;
 	funnelPageId: string;
+	draggingComponent: EditorBtns | null;
+	dropTargetId: string | null;
+	dropPosition: "top" | "center" | "bottom" | null;
 };
 
 export type HistoryState = {
@@ -68,6 +71,9 @@ const initialEditorState: EditorState["editor"] = {
 	previewMode: false,
 	liveMode: false,
 	funnelPageId: "",
+	draggingComponent: null,
+	dropTargetId: null,
+	dropPosition: null,
 };
 
 const initialHistoryState: HistoryState = {
@@ -375,6 +381,48 @@ const actionHandlers: ActionHandler = {
 				...state.history,
 				history: updatedHistory,
 				currentIndex: updatedHistory.length - 1,
+			},
+		};
+	},
+
+	[editorActionType.SET_DRAGGING_COMPONENT]: (state, action) => {
+		return {
+			...state,
+			editor: {
+				...state.editor,
+				draggingComponent: action.payload.componentType,
+			},
+		};
+	},
+
+	[editorActionType.CLEAR_DRAGGING_COMPONENT]: (state) => {
+		return {
+			...state,
+			editor: {
+				...state.editor,
+				draggingComponent: null,
+			},
+		};
+	},
+
+	[editorActionType.SET_DROP_TARGET]: (state, action) => {
+		return {
+			...state,
+			editor: {
+				...state.editor,
+				dropTargetId: action.payload.dropTargetId,
+				dropPosition: action.payload.dropPosition,
+			},
+		};
+	},
+
+	[editorActionType.CLEAR_DROP_TARGET]: (state) => {
+		return {
+			...state,
+			editor: {
+				...state.editor,
+				dropTargetId: null,
+				dropPosition: null,
 			},
 		};
 	},

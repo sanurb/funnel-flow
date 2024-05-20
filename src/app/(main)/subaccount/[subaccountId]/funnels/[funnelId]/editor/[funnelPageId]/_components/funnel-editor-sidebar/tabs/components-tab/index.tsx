@@ -4,7 +4,8 @@ import {
 	AccordionItem,
 	AccordionTrigger,
 } from "@/components/ui/accordion";
-import type { EditorBtns } from "@/lib/constants";
+import { type EditorBtns, editorActionType } from "@/lib/constants";
+import { useEditor } from "@/providers/editor/editor-provider";
 import type React from "react";
 import CheckoutPlaceholder from "./checkout-placeholder";
 import ContactFormComponentPlaceholder from "./contact-form-placeholder";
@@ -16,7 +17,22 @@ import VideoPlaceholder from "./video-placeholder";
 
 type Props = {};
 
-const ComponentsTab = (props: Props) => {
+const ComponentsTab = (_props: Props) => {
+	const { dispatch } = useEditor();
+
+	const handleDragStart = (e: React.DragEvent, type: EditorBtns) => {
+		if (!type) return;
+		e.dataTransfer.setData("componentType", type);
+		dispatch({
+			type: editorActionType.SET_DRAGGING_COMPONENT,
+			payload: { componentType: type },
+		});
+	};
+
+	const handleDragEnd = () => {
+		dispatch({ type: editorActionType.CLEAR_DRAGGING_COMPONENT });
+	};
+
 	const elements: {
 		Component: React.ReactNode;
 		label: string;
@@ -82,6 +98,8 @@ const ComponentsTab = (props: Props) => {
 							<div
 								key={element.id}
 								className="flex-col items-center justify-center flex"
+								onDragStart={(e) => handleDragStart(e, element.id)}
+								onDragEnd={handleDragEnd}
 							>
 								{element.Component}
 								<span className="text-muted-foreground">{element.label}</span>
@@ -98,6 +116,8 @@ const ComponentsTab = (props: Props) => {
 							<div
 								key={element.id}
 								className="flex-col items-center justify-center flex"
+								onDragStart={(e) => handleDragStart(e, element.id)}
+								onDragEnd={handleDragEnd}
 							>
 								{element.Component}
 								<span className="text-muted-foreground">{element.label}</span>
