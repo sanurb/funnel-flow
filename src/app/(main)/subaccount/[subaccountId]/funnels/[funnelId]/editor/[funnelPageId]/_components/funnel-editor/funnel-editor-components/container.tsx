@@ -1,10 +1,7 @@
 "use client";
 import { Badge } from "@/components/ui/badge";
-import {
-	type EditorBtns,
-	defaultStyles,
-	editorActionType,
-} from "@/lib/constants";
+import { useDebouncedObservable } from "@/hooks/useDebouncedObservable";
+import { type EditorBtns, editorActionType } from "@/lib/constants";
 import {
 	type EditorElement,
 	useEditor,
@@ -12,8 +9,8 @@ import {
 import clsx from "clsx";
 import { Trash } from "lucide-react";
 import type React from "react";
-import { useCallback } from "react";
-import { v4 } from "uuid";
+import { memo, useCallback } from "react";
+import { elementFactory } from "../../../utils/elementFactory";
 import Recursive from "./recursive";
 
 type Props = { element: EditorElement };
@@ -23,70 +20,6 @@ const Container = ({ element }: Props) => {
 	const { dispatch, state } = useEditor();
 	const isContainerEmpty =
 		!Array.isArray(element.content) || element.content.length === 0;
-
-	const createBasicElementDetails = (
-		id: string,
-		name: string,
-		type: EditorBtns,
-		content: EditorElement["content"],
-		additionalStyles: React.CSSProperties = {},
-	): { containerId: string; elementDetails: EditorElement } => ({
-		containerId: id,
-		elementDetails: {
-			id: v4(),
-			name,
-			styles: { ...defaultStyles, ...additionalStyles },
-			type,
-			content,
-		},
-	});
-
-	const elementFactory: Record<
-		string,
-		(id: string) => { containerId: string; elementDetails: EditorElement }
-	> = {
-		text: (id: string) =>
-			createBasicElementDetails(
-				id,
-				"Text",
-				"text",
-				{ innerText: "Text Element" },
-				{ color: "black" },
-			),
-		link: (id: string) =>
-			createBasicElementDetails(
-				id,
-				"Link",
-				"link",
-				{ innerText: "Link Element", href: "#" },
-				{ color: "black" },
-			),
-		video: (id: string) =>
-			createBasicElementDetails(id, "Video", "video", {
-				src: "https://www.youtube.com/embed/TX9qSaGXFyg?si=fNsKJM7pkgWZamhU",
-			}),
-		container: (id: string) =>
-			createBasicElementDetails(id, "Container", "container", []),
-		contactForm: (id: string) =>
-			createBasicElementDetails(id, "Contact Form", "contactForm", []),
-		paymentForm: (id: string) =>
-			createBasicElementDetails(id, "Contact Form", "paymentForm", []),
-		"2Col": (id: string) => ({
-			containerId: id,
-			elementDetails: {
-				id: v4(),
-				name: "Two Columns",
-				styles: { ...defaultStyles, display: "flex" },
-				type: "2Col",
-				content: [
-					createBasicElementDetails(id, "Container", "container", [])
-						.elementDetails,
-					createBasicElementDetails(id, "Container", "container", [])
-						.elementDetails,
-				],
-			},
-		}),
-	};
 
 	const handleDrop = useCallback(
 		(e: React.DragEvent, id: string) => {
@@ -98,8 +31,7 @@ const Container = ({ element }: Props) => {
 			if (!componentType) {
 				return;
 			}
-			const action =
-				elementFactory[componentType as keyof typeof elementFactory];
+			const action = elementFactory[componentType];
 			if (action) {
 				const payload = action(id);
 				dispatch({
@@ -111,7 +43,7 @@ const Container = ({ element }: Props) => {
 				type: editorActionType.CLEAR_DROP_TARGET,
 			});
 		},
-		[dispatch, elementFactory],
+		[dispatch],
 	);
 
 	const getDropPosition = useCallback(
@@ -138,6 +70,8 @@ const Container = ({ element }: Props) => {
 			e.stopPropagation();
 
 			const container = e.currentTarget as HTMLElement;
+			if (!container) return;
+
 			const boundingRect = container.getBoundingClientRect();
 
 			const offsetY = e.clientY - boundingRect.top;
@@ -204,9 +138,16 @@ const Container = ({ element }: Props) => {
 		});
 	}, [dispatch, element]);
 
+	const dropRef = useDebouncedObservable<React.DragEvent>(
+		"dragover",
+		handleDragOver,
+		200,
+	);
+
 	return (
 		// biome-ignore lint/a11y/useKeyWithClickEvents: <explanation>
 		<div
+			ref={dropRef}
 			style={styles}
 			className={clsx("relative p-4 transition-all group", {
 				"max-w-full w-full": type === "container" || type === "2Col",
@@ -296,4 +237,4 @@ const Container = ({ element }: Props) => {
 	);
 };
 
-export default Container;
+export default memo(Container);
