@@ -12,6 +12,7 @@ import {
 import clsx from "clsx";
 import { Trash } from "lucide-react";
 import type React from "react";
+import { useCallback } from "react";
 import { v4 } from "uuid";
 import Recursive from "./recursive";
 
@@ -87,104 +88,121 @@ const Container = ({ element }: Props) => {
 		}),
 	};
 
-	const handleDrop = (e: React.DragEvent, id: string) => {
-		e.stopPropagation();
-		const componentType = e.dataTransfer.getData("componentType") as EditorBtns;
+	const handleDrop = useCallback(
+		(e: React.DragEvent, id: string) => {
+			e.stopPropagation();
+			const componentType = e.dataTransfer.getData(
+				"componentType",
+			) as EditorBtns;
 
-		if (!componentType) {
-			return;
-		}
-		const action = elementFactory[componentType as keyof typeof elementFactory];
-		if (action) {
-			const payload = action(id);
+			if (!componentType) {
+				return;
+			}
+			const action =
+				elementFactory[componentType as keyof typeof elementFactory];
+			if (action) {
+				const payload = action(id);
+				dispatch({
+					type: editorActionType.ADD_ELEMENT,
+					payload,
+				});
+			}
 			dispatch({
-				type: editorActionType.ADD_ELEMENT,
-				payload,
+				type: editorActionType.CLEAR_DROP_TARGET,
 			});
-		}
-		dispatch({
-			type: editorActionType.CLEAR_DROP_TARGET,
-		});
-	};
+		},
+		[dispatch, elementFactory],
+	);
 
-	const getDropPosition = (
-		offsetY: number,
-		height: number,
-		isContainerEmpty: boolean,
-	) => {
-		const positions: { [key: string]: boolean } = {
-			center:
-				isContainerEmpty ||
-				(offsetY >= height / 3 && offsetY <= (height / 3) * 2),
-			// top: !isContainerEmpty && offsetY < height / 3,
-			bottom: !isContainerEmpty && offsetY > (height / 3) * 2,
-		};
+	const getDropPosition = useCallback(
+		(offsetY: number, height: number, isContainerEmpty: boolean) => {
+			const positions: { [key: string]: boolean } = {
+				center:
+					isContainerEmpty ||
+					(offsetY >= height / 3 && offsetY <= (height / 3) * 2),
+				// top: !isContainerEmpty && offsetY < height / 3,
+				bottom: !isContainerEmpty && offsetY > (height / 3) * 2,
+			};
 
-		return Object.keys(positions).find((key) => positions[key]) as
-			| "top"
-			| "center"
-			| "bottom";
-	};
+			return Object.keys(positions).find((key) => positions[key]) as
+				| "top"
+				| "center"
+				| "bottom";
+		},
+		[],
+	);
 
-	const handleDragOver = (e: React.DragEvent) => {
-		e.preventDefault();
-		e.stopPropagation();
+	const handleDragOver = useCallback(
+		(e: React.DragEvent) => {
+			e.preventDefault();
+			e.stopPropagation();
 
-		const container = e.currentTarget as HTMLElement;
-		const boundingRect = container.getBoundingClientRect();
+			const container = e.currentTarget as HTMLElement;
+			const boundingRect = container.getBoundingClientRect();
 
-		const offsetY = e.clientY - boundingRect.top;
-		const dropPosition =
-			getDropPosition(offsetY, boundingRect.height, isContainerEmpty) ??
-			"bottom";
+			const offsetY = e.clientY - boundingRect.top;
+			const dropPosition =
+				getDropPosition(offsetY, boundingRect.height, isContainerEmpty) ??
+				"bottom";
 
-		dispatch({
-			type: editorActionType.SET_DROP_TARGET,
-			payload: { dropTargetId: id, dropPosition },
-		});
-	};
+			dispatch({
+				type: editorActionType.SET_DROP_TARGET,
+				payload: { dropTargetId: id, dropPosition },
+			});
+		},
+		[dispatch, getDropPosition, id, isContainerEmpty],
+	);
 
-	const handleDragEnter = (e: React.DragEvent) => {
-		e.preventDefault();
-		e.stopPropagation();
-		dispatch({
-			type: editorActionType.SET_DROP_TARGET,
-			payload: { dropTargetId: id, dropPosition: "center" },
-		});
-	};
+	const handleDragEnter = useCallback(
+		(e: React.DragEvent) => {
+			e.preventDefault();
+			e.stopPropagation();
+			dispatch({
+				type: editorActionType.SET_DROP_TARGET,
+				payload: { dropTargetId: id, dropPosition: "center" },
+			});
+		},
+		[dispatch, id],
+	);
 
-	const handleDragLeave = (e: React.DragEvent) => {
-		e.preventDefault();
-		e.stopPropagation();
-		dispatch({
-			type: editorActionType.CLEAR_DROP_TARGET,
-		});
-		console.log(`drag leave ${id} on date ${new Date()}`);
-	};
+	const handleDragLeave = useCallback(
+		(e: React.DragEvent) => {
+			e.preventDefault();
+			e.stopPropagation();
+			dispatch({
+				type: editorActionType.CLEAR_DROP_TARGET,
+			});
+			console.log(`drag leave ${id} on date ${new Date()}`);
+		},
+		[dispatch, id],
+	);
 
-	const handleDragStart = (e: React.DragEvent, type: string) => {
+	const handleDragStart = useCallback((e: React.DragEvent, type: string) => {
 		if (type === "__body") return;
 		e.dataTransfer.setData("componentType", type);
-	};
+	}, []);
 
-	const handleOnClickBody = (e: React.MouseEvent) => {
-		e.stopPropagation();
-		dispatch({
-			type: editorActionType.CHANGE_CLICKED_ELEMENT,
-			payload: {
-				elementDetails: element,
-			},
-		});
-	};
+	const handleOnClickBody = useCallback(
+		(e: React.MouseEvent) => {
+			e.stopPropagation();
+			dispatch({
+				type: editorActionType.CHANGE_CLICKED_ELEMENT,
+				payload: {
+					elementDetails: element,
+				},
+			});
+		},
+		[dispatch, element],
+	);
 
-	const handleDeleteElement = () => {
+	const handleDeleteElement = useCallback(() => {
 		dispatch({
 			type: editorActionType.DELETE_ELEMENT,
 			payload: {
 				elementDetails: element,
 			},
 		});
-	};
+	}, [dispatch, element]);
 
 	return (
 		// biome-ignore lint/a11y/useKeyWithClickEvents: <explanation>
