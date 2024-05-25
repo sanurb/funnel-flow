@@ -1,4 +1,4 @@
-import type { editorActionType } from "@/lib/constants";
+import type { EditorBtns, editorActionType } from "@/lib/constants";
 import type { DeviceTypes, EditorElement } from "./editor-provider";
 
 type EmptyObject = {
@@ -68,4 +68,23 @@ export type EditorAction =
 			payload: {
 				funnelPageId: string;
 			};
+	  }
+	| {
+			type: typeof editorActionType.SET_DRAGGING_COMPONENT;
+			payload: {
+				componentType: EditorBtns;
+			};
+	  }
+	| {
+			type: typeof editorActionType.CLEAR_DRAGGING_COMPONENT;
+	  }
+	| {
+			type: typeof editorActionType.SET_DROP_TARGET;
+			payload: {
+				dropTargetId: string;
+				dropPosition: "top" | "center" | "bottom";
+			};
+	  }
+	| {
+			type: typeof editorActionType.CLEAR_DROP_TARGET;
 	  };

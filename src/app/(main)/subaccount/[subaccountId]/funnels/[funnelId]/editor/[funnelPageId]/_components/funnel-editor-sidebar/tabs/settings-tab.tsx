@@ -5,6 +5,7 @@ import {
 	AccordionItem,
 	AccordionTrigger,
 } from "@/components/ui/accordion";
+import { GradientPicker } from "@/components/ui/gradient-picker";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import {
@@ -26,7 +27,6 @@ import {
 } from "@/components/ui/tooltip";
 import { editorActionType } from "@/lib/constants";
 import { useEditor } from "@/providers/editor/editor-provider";
-import { InfoIcon } from "lucide-react";
 import {
 	AlignCenter,
 	AlignHorizontalJustifyCenterIcon,
@@ -40,8 +40,10 @@ import {
 	AlignVerticalJustifyCenter,
 	AlignVerticalJustifyStart,
 	ChevronsLeftRightIcon,
+	InfoIcon,
 	LucideImageDown,
 } from "lucide-react";
+import { updateElementStyles } from "./utils";
 
 const SettingsTab = () => {
 	const { state, dispatch } = useEditor();
@@ -88,6 +90,21 @@ const SettingsTab = () => {
 		});
 	};
 
+	const handleGradientPickerChange = (property: string, value: string) => {
+		const updatedElement = updateElementStyles(
+			state.editor.selectedElement,
+			property,
+			value,
+		);
+
+		dispatch({
+			type: editorActionType.UPDATE_ELEMENT,
+			payload: {
+				elementDetails: updatedElement,
+			},
+		});
+	};
+
 	return (
 		<Accordion
 			type="multiple"
@@ -107,6 +124,30 @@ const SettingsTab = () => {
 									onChange={handleChangeCustomValues}
 									value={state.editor.selectedElement.content.href}
 								/>
+
+								<p className="text-muted-foreground">Select target</p>
+								<Select
+									onValueChange={(e) =>
+										handleChangeCustomValues({
+											target: {
+												id: "target",
+												value: e,
+											},
+										})
+									}
+									value={state.editor.selectedElement.content.target}
+								>
+									<SelectTrigger>
+										<SelectValue placeholder="Select a target" />
+									</SelectTrigger>
+									<SelectContent>
+										<SelectGroup>
+											<SelectLabel>Targets</SelectLabel>
+											<SelectItem value="_blank">New Tab</SelectItem>
+											<SelectItem value="_self">Same Tab</SelectItem>
+										</SelectGroup>
+									</SelectContent>
+								</Select>
 							</div>
 						)}
 
@@ -170,18 +211,18 @@ const SettingsTab = () => {
 									<AlignLeft size={18} />
 								</TabsTrigger>
 								<TabsTrigger
-									value="right"
-									title="Right"
-									className="w-10 h-10 p-0 data-[state=active]:bg-muted"
-								>
-									<AlignRight size={18} />
-								</TabsTrigger>
-								<TabsTrigger
 									value="center"
 									title="Center"
 									className="w-10 h-10 p-0 data-[state=active]:bg-muted"
 								>
 									<AlignCenter size={18} />
+								</TabsTrigger>
+								<TabsTrigger
+									value="right"
+									title="Right"
+									className="w-10 h-10 p-0 data-[state=active]:bg-muted"
+								>
+									<AlignRight size={18} />
 								</TabsTrigger>
 								<TabsTrigger
 									value="justify"
@@ -203,10 +244,11 @@ const SettingsTab = () => {
 					</div>
 					<div className="flex flex-col gap-2">
 						<p className="text-muted-foreground">Color</p>
-						<Input
-							id="color"
-							onChange={handleOnChanges}
-							value={state.editor.selectedElement.styles.color}
+						<GradientPicker
+							background={state.editor.selectedElement.styles.color ?? ""}
+							setBackground={(color) =>
+								handleGradientPickerChange("color", color)
+							}
 						/>
 					</div>
 					<div className="flex gap-4">
@@ -450,22 +492,14 @@ const SettingsTab = () => {
 					</div>
 					<div className="flex flex-col gap-2">
 						<Label className="text-muted-foreground">Background Color</Label>
-						<div className="flex  border-[1px] rounded-md overflow-clip">
-							<div
-								className="w-12 "
-								style={{
-									backgroundColor:
-										state.editor.selectedElement.styles.backgroundColor,
-								}}
-							/>
-							<Input
-								placeholder="#HFI245"
-								className="!border-y-0 rounded-none !border-r-0 mr-2"
-								id="backgroundColor"
-								onChange={handleOnChanges}
-								value={state.editor.selectedElement.styles.backgroundColor}
-							/>
-						</div>
+						<GradientPicker
+							background={
+								state.editor.selectedElement.styles.backgroundColor ?? ""
+							}
+							setBackground={(color) =>
+								handleGradientPickerChange("backgroundColor", color)
+							}
+						/>
 					</div>
 					<div className="flex flex-col gap-2">
 						<Label className="text-muted-foreground">Background Image</Label>

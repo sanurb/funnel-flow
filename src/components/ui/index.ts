@@ -1,4 +1,3 @@
-// Exportando todos los componentes desde el directorio 'ui'
 export * from "./accordion";
 export * from "./alert-dialog";
 export * from "./alert";
@@ -43,3 +42,4 @@ export * from "./toggle-group";
 export * from "./toggle";
 export * from "./tooltip";
 export * from "./use-toast";
+export * from "./gradient-picker";
