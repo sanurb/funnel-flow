@@ -5,7 +5,6 @@ import {
 	saveActivityLogsNotification,
 } from "@/lib/queries";
 import { useRouter } from "next/navigation";
-import React from "react";
 
 type Props = {
 	subaccountId: string;

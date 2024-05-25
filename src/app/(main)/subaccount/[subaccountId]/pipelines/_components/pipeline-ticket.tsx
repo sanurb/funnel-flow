@@ -40,7 +40,7 @@ import type { TicketWithTags } from "@/lib/types";
 import { useModal } from "@/providers/modal-provider";
 import { Contact2, Edit, MoreHorizontalIcon, Trash, User2 } from "lucide-react";
 import { useRouter } from "next/navigation";
-import React, { type Dispatch, type SetStateAction } from "react";
+import type { Dispatch, SetStateAction } from "react";
 import { Draggable } from "react-beautiful-dnd";
 
 type Props = {

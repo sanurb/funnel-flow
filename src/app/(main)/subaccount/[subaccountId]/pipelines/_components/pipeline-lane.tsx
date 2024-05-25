@@ -1,6 +1,9 @@
 "use client";
 import CreateLaneForm from "@/components/forms/lane-form";
 
+import TicketForm from "@/components/forms/ticket-form";
+// import PipelineTicket from './pipeline-ticket'
+import CustomModal from "@/components/global/custom-modal";
 import {
 	AlertDialog,
 	AlertDialogAction,
@@ -25,14 +28,11 @@ import { deleteLane, saveActivityLogsNotification } from "@/lib/queries";
 import type { LaneDetail, TicketWithTags } from "@/lib/types";
 import { cn } from "@/lib/utils";
 import { useModal } from "@/providers/modal-provider";
-import { Draggable, Droppable } from "react-beautiful-dnd";
 import { Edit, MoreVertical, PlusCircleIcon, Trash } from "lucide-react";
 import { useRouter } from "next/navigation";
 import type React from "react";
 import { type Dispatch, type SetStateAction, useMemo } from "react";
-// import PipelineTicket from './pipeline-ticket'
-import CustomModal from "@/components/global/custom-modal";
-import TicketForm from "@/components/forms/ticket-form";
+import { Draggable, Droppable } from "react-beautiful-dnd";
 import PipelineTicket from "./pipeline-ticket";
 
 interface PipelaneLaneProps {

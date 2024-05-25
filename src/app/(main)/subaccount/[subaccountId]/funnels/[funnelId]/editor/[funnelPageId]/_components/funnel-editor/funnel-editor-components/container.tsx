@@ -1,15 +1,19 @@
 "use client";
 import { Badge } from "@/components/ui/badge";
-import { type EditorBtns, defaultStyles } from "@/lib/constants";
+import {
+	type EditorBtns,
+	defaultStyles,
+	editorActionType,
+} from "@/lib/constants";
 import {
 	type EditorElement,
 	useEditor,
 } from "@/providers/editor/editor-provider";
 import clsx from "clsx";
+import { Trash } from "lucide-react";
 import type React from "react";
 import { v4 } from "uuid";
 import Recursive from "./recursive";
-import { Trash } from "lucide-react";
 
 type Props = { element: EditorElement };
 
@@ -17,142 +21,84 @@ const Container = ({ element }: Props) => {
 	const { id, content, name, styles, type } = element;
 	const { dispatch, state } = useEditor();
 
-	const handleOnDrop = (e: React.DragEvent, type: string) => {
+	const createBasicElementDetails = (
+		id: string,
+		name: string,
+		type: EditorBtns,
+		content: EditorElement["content"],
+		additionalStyles: React.CSSProperties = {},
+	): { containerId: string; elementDetails: EditorElement } => ({
+		containerId: id,
+		elementDetails: {
+			id: v4(),
+			name,
+			styles: { ...defaultStyles, ...additionalStyles },
+			type,
+			content,
+		},
+	});
+
+	const elementFactory: Record<
+		string,
+		(id: string) => { containerId: string; elementDetails: EditorElement }
+	> = {
+		text: (id: string) =>
+			createBasicElementDetails(
+				id,
+				"Text",
+				"text",
+				{ innerText: "Text Element" },
+				{ color: "black" },
+			),
+		link: (id: string) =>
+			createBasicElementDetails(
+				id,
+				"Link",
+				"link",
+				{ innerText: "Link Element", href: "#" },
+				{ color: "black" },
+			),
+		video: (id: string) =>
+			createBasicElementDetails(id, "Video", "video", {
+				src: "https://www.youtube.com/embed/TX9qSaGXFyg?si=fNsKJM7pkgWZamhU",
+			}),
+		container: (id: string) =>
+			createBasicElementDetails(id, "Container", "container", []),
+		contactForm: (id: string) =>
+			createBasicElementDetails(id, "Contact Form", "contactForm", []),
+		paymentForm: (id: string) =>
+			createBasicElementDetails(id, "Contact Form", "paymentForm", []),
+		"2Col": (id: string) => ({
+			containerId: id,
+			elementDetails: {
+				id: v4(),
+				name: "Two Columns",
+				styles: { ...defaultStyles, display: "flex" },
+				type: "2Col",
+				content: [
+					createBasicElementDetails(id, "Container", "container", [])
+						.elementDetails,
+					createBasicElementDetails(id, "Container", "container", [])
+						.elementDetails,
+				],
+			},
+		}),
+	};
+
+	const handleOnDrop = (e: React.DragEvent, id: string) => {
 		e.stopPropagation();
 		const componentType = e.dataTransfer.getData("componentType") as EditorBtns;
 
-		switch (componentType) {
-			case "text":
-				dispatch({
-					type: "ADD_ELEMENT",
-					payload: {
-						containerId: id,
-						elementDetails: {
-							content: { innerText: "Text Element" },
-							id: v4(),
-							name: "Text",
-							styles: {
-								color: "black",
-								...defaultStyles,
-							},
-							type: "text",
-						},
-					},
-				});
-				break;
-			case "link":
-				dispatch({
-					type: "ADD_ELEMENT",
-					payload: {
-						containerId: id,
-						elementDetails: {
-							content: {
-								innerText: "Link Element",
-								href: "#",
-							},
-							id: v4(),
-							name: "Link",
-							styles: {
-								color: "black",
-								...defaultStyles,
-							},
-							type: "link",
-						},
-					},
-				});
-				break;
-			case "video":
-				dispatch({
-					type: "ADD_ELEMENT",
-					payload: {
-						containerId: id,
-						elementDetails: {
-							content: {
-								src: "https://www.youtube.com/embed/A3l6YYkXzzg?si=zbcCeWcpq7Cwf8W1",
-							},
-							id: v4(),
-							name: "Video",
-							styles: {},
-							type: "video",
-						},
-					},
-				});
-				break;
-			case "container":
-				dispatch({
-					type: "ADD_ELEMENT",
-					payload: {
-						containerId: id,
-						elementDetails: {
-							content: [],
-							id: v4(),
-							name: "Container",
-							styles: { ...defaultStyles },
-							type: "container",
-						},
-					},
-				});
-				break;
-			case "contactForm":
-				dispatch({
-					type: "ADD_ELEMENT",
-					payload: {
-						containerId: id,
-						elementDetails: {
-							content: [],
-							id: v4(),
-							name: "Contact Form",
-							styles: {},
-							type: "contactForm",
-						},
-					},
-				});
-				break;
-			case "paymentForm":
-				dispatch({
-					type: "ADD_ELEMENT",
-					payload: {
-						containerId: id,
-						elementDetails: {
-							content: [],
-							id: v4(),
-							name: "Contact Form",
-							styles: {},
-							type: "paymentForm",
-						},
-					},
-				});
-				break;
-			case "2Col":
-				dispatch({
-					type: "ADD_ELEMENT",
-					payload: {
-						containerId: id,
-						elementDetails: {
-							content: [
-								{
-									content: [],
-									id: v4(),
-									name: "Container",
-									styles: { ...defaultStyles, width: "100%" },
-									type: "container",
-								},
-								{
-									content: [],
-									id: v4(),
-									name: "Container",
-									styles: { ...defaultStyles, width: "100%" },
-									type: "container",
-								},
-							],
-							id: v4(),
-							name: "Two Columns",
-							styles: { ...defaultStyles, display: "flex" },
-							type: "2Col",
-						},
-					},
-				});
-				break;
+		if (!componentType) {
+			return;
+		}
+		const action = elementFactory[componentType as keyof typeof elementFactory];
+		if (action) {
+			const payload = action(id);
+			dispatch({
+				type: editorActionType.ADD_ELEMENT,
+				payload,
+			});
 		}
 	};
 
@@ -168,7 +114,7 @@ const Container = ({ element }: Props) => {
 	const handleOnClickBody = (e: React.MouseEvent) => {
 		e.stopPropagation();
 		dispatch({
-			type: "CHANGE_CLICKED_ELEMENT",
+			type: editorActionType.CHANGE_CLICKED_ELEMENT,
 			payload: {
 				elementDetails: element,
 			},
@@ -177,7 +123,7 @@ const Container = ({ element }: Props) => {
 
 	const handleDeleteElement = () => {
 		dispatch({
-			type: "DELETE_ELEMENT",
+			type: editorActionType.DELETE_ELEMENT,
 			payload: {
 				elementDetails: element,
 			},

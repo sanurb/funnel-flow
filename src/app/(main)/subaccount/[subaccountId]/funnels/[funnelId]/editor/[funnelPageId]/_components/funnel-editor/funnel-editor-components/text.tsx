@@ -1,5 +1,6 @@
 "use client";
 import { Badge } from "@/components/ui/badge";
+import { editorActionType } from "@/lib/constants";
 import {
 	type EditorElement,
 	useEditor,
@@ -17,7 +18,7 @@ const TextComponent = (props: Props) => {
 
 	const handleDeleteElement = () => {
 		dispatch({
-			type: "DELETE_ELEMENT",
+			type: editorActionType.DELETE_ELEMENT,
 			payload: { elementDetails: props.element },
 		});
 	};
@@ -26,7 +27,7 @@ const TextComponent = (props: Props) => {
 	const handleOnClickBody = (e: React.MouseEvent) => {
 		e.stopPropagation();
 		dispatch({
-			type: "CHANGE_CLICKED_ELEMENT",
+			type: editorActionType.CHANGE_CLICKED_ELEMENT,
 			payload: {
 				elementDetails: props.element,
 			},
@@ -56,11 +57,13 @@ const TextComponent = (props: Props) => {
 					</Badge>
 				)}
 			<span
+				className="focus:outline-none"
 				contentEditable={!state.editor.liveMode}
+				suppressContentEditableWarning={true}
 				onBlur={(e) => {
 					const spanElement = e.target as HTMLSpanElement;
 					dispatch({
-						type: "UPDATE_ELEMENT",
+						type: editorActionType.UPDATE_ELEMENT,
 						payload: {
 							elementDetails: {
 								...props.element,

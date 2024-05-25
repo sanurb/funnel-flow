@@ -12,9 +12,9 @@ const ContainerPlaceholder = (props: Props) => {
 		<div
 			draggable
 			onDragStart={(e) => handleDragStart(e, "container")}
-			className=" h-14 w-14 bg-muted/70 rounded-lg p-2 flex flex-row gap-[4px]"
+			className="cursor-move h-14 w-14 bg-muted/70 rounded-lg p-2 flex flex-row gap-[4px] transition duration-300 ease-in-out hover:brightness-150"
 		>
-			<div className="border-dashed border-[1px] h-full rounded-sm bg-muted border-muted-foreground/50 w-full" />
+			<div className="border-dashed border-[1px] h-full rounded-sm bg-muted border-muted-foreground/50 w-full hover:brightness-150" />
 		</div>
 	);
 };

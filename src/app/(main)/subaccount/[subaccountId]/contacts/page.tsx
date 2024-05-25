@@ -12,7 +12,6 @@ import {
 import { db } from "@/lib/db";
 import type { Contact, SubAccount, Ticket } from "@prisma/client";
 import format from "date-fns/format";
-import React from "react";
 import CraeteContactButton from "./_components/create-contact-btn";
 
 type Props = {

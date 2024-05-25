@@ -1,5 +1,5 @@
 import type { EditorBtns } from "@/lib/constants";
-import { Link2Icon, TypeIcon } from "lucide-react";
+import { Link2Icon } from "lucide-react";
 import type React from "react";
 
 type Props = {};
@@ -13,7 +13,7 @@ const LinkPlaceholder = (props: Props) => {
 		<div
 			draggable
 			onDragStart={(e) => handleDragStart(e, "link")}
-			className=" h-14 w-14 bg-muted rounded-lg flex items-center justify-center"
+			className="cursor-move h-14 w-14 bg-muted rounded-lg flex items-center justify-center transition duration-300 ease-in-out hover:brightness-150"
 		>
 			<Link2Icon size={40} className="text-muted-foreground" />
 		</div>

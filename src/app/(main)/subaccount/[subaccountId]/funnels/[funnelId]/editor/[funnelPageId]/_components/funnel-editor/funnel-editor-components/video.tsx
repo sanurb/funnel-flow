@@ -1,6 +1,6 @@
 "use client";
 import { Badge } from "@/components/ui/badge";
-import type { EditorBtns } from "@/lib/constants";
+import { type EditorBtns, editorActionType } from "@/lib/constants";
 import {
 	type EditorElement,
 	useEditor,
@@ -25,7 +25,7 @@ const VideoComponent = (props: Props) => {
 	const handleOnClick = (e: React.MouseEvent) => {
 		e.stopPropagation();
 		dispatch({
-			type: "CHANGE_CLICKED_ELEMENT",
+			type: editorActionType.CHANGE_CLICKED_ELEMENT,
 			payload: {
 				elementDetails: props.element,
 			},
@@ -34,7 +34,7 @@ const VideoComponent = (props: Props) => {
 
 	const handleDeleteElement = () => {
 		dispatch({
-			type: "DELETE_ELEMENT",
+			type: editorActionType.DELETE_ELEMENT,
 			payload: { elementDetails: props.element },
 		});
 	};

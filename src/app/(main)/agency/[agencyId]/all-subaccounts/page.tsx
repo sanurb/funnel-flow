@@ -23,8 +23,8 @@ import Link from "next/link";
 
 import { Button } from "@/components/ui/button";
 import type { SubAccount } from "@prisma/client";
-import DeleteButton from "./_components/delete-button";
 import CreateSubaccountButton from "./_components/create-subaccount-btn";
+import DeleteButton from "./_components/delete-button";
 
 type Props = {
 	params: { agencyId: string };

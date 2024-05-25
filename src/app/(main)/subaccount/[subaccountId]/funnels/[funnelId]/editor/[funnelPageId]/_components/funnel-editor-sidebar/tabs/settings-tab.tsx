@@ -1,13 +1,32 @@
 "use client";
-import React, { ChangeEventHandler } from "react";
 import {
 	Accordion,
 	AccordionContent,
 	AccordionItem,
 	AccordionTrigger,
 } from "@/components/ui/accordion";
+import { GradientPicker } from "@/components/ui/gradient-picker";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import {
+	Select,
+	SelectContent,
+	SelectGroup,
+	SelectItem,
+	SelectLabel,
+	SelectTrigger,
+	SelectValue,
+} from "@/components/ui/select";
+import { Slider } from "@/components/ui/slider";
+import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import {
+	Tooltip,
+	TooltipContent,
+	TooltipProvider,
+	TooltipTrigger,
+} from "@/components/ui/tooltip";
+import { editorActionType } from "@/lib/constants";
+import { useEditor } from "@/providers/editor/editor-provider";
 import {
 	AlignCenter,
 	AlignHorizontalJustifyCenterIcon,
@@ -21,24 +40,12 @@ import {
 	AlignVerticalJustifyCenter,
 	AlignVerticalJustifyStart,
 	ChevronsLeftRightIcon,
+	InfoIcon,
 	LucideImageDown,
 } from "lucide-react";
-import { Tabs, TabsTrigger, TabsList } from "@/components/ui/tabs";
-import {
-	Select,
-	SelectContent,
-	SelectGroup,
-	SelectItem,
-	SelectLabel,
-	SelectTrigger,
-	SelectValue,
-} from "@/components/ui/select";
-import { useEditor } from "@/providers/editor/editor-provider";
-import { Slider } from "@/components/ui/slider";
+import { updateElementStyles } from "./utils";
 
-type Props = {};
-
-const SettingsTab = (props: Props) => {
+const SettingsTab = () => {
 	const { state, dispatch } = useEditor();
 
 	const handleOnChanges = (e: any) => {
@@ -49,7 +56,7 @@ const SettingsTab = (props: Props) => {
 		};
 
 		dispatch({
-			type: "UPDATE_ELEMENT",
+			type: editorActionType.UPDATE_ELEMENT,
 			payload: {
 				elementDetails: {
 					...state.editor.selectedElement,
@@ -70,7 +77,7 @@ const SettingsTab = (props: Props) => {
 		};
 
 		dispatch({
-			type: "UPDATE_ELEMENT",
+			type: editorActionType.UPDATE_ELEMENT,
 			payload: {
 				elementDetails: {
 					...state.editor.selectedElement,
@@ -79,6 +86,21 @@ const SettingsTab = (props: Props) => {
 						...styleObject,
 					},
 				},
+			},
+		});
+	};
+
+	const handleGradientPickerChange = (property: string, value: string) => {
+		const updatedElement = updateElementStyles(
+			state.editor.selectedElement,
+			property,
+			value,
+		);
+
+		dispatch({
+			type: editorActionType.UPDATE_ELEMENT,
+			payload: {
+				elementDetails: updatedElement,
 			},
 		});
 	};
@@ -101,6 +123,62 @@ const SettingsTab = (props: Props) => {
 									placeholder="https:domain.example.com/pathname"
 									onChange={handleChangeCustomValues}
 									value={state.editor.selectedElement.content.href}
+								/>
+
+								<p className="text-muted-foreground">Select target</p>
+								<Select
+									onValueChange={(e) =>
+										handleChangeCustomValues({
+											target: {
+												id: "target",
+												value: e,
+											},
+										})
+									}
+									value={state.editor.selectedElement.content.target}
+								>
+									<SelectTrigger>
+										<SelectValue placeholder="Select a target" />
+									</SelectTrigger>
+									<SelectContent>
+										<SelectGroup>
+											<SelectLabel>Targets</SelectLabel>
+											<SelectItem value="_blank">New Tab</SelectItem>
+											<SelectItem value="_self">Same Tab</SelectItem>
+										</SelectGroup>
+									</SelectContent>
+								</Select>
+							</div>
+						)}
+
+					{state.editor.selectedElement.type === "video" &&
+						!Array.isArray(state.editor.selectedElement.content) && (
+							<div className="flex flex-col gap-2">
+								<div className="flex items-center gap-2">
+									<p className="text-muted-foreground">Video URL</p>
+									<TooltipProvider>
+										<Tooltip>
+											<TooltipTrigger asChild>
+												<div>
+													<InfoIcon
+														className="text-muted-foreground transition duration-300 ease-in-out hover:brightness-150"
+														size={16}
+													/>
+												</div>
+											</TooltipTrigger>
+											<TooltipContent align="start">
+												<div className="p-2 shadow-lg rounded">
+													<p>Enter an embedded URL</p>
+												</div>
+											</TooltipContent>
+										</Tooltip>
+									</TooltipProvider>
+								</div>
+								<Input
+									id="src"
+									placeholder="https://www.youtube.com/embed/XZY"
+									onChange={handleChangeCustomValues}
+									value={state.editor.selectedElement.content.src || ""}
 								/>
 							</div>
 						)}
@@ -127,24 +205,28 @@ const SettingsTab = (props: Props) => {
 							<TabsList className="flex items-center flex-row justify-between border-[1px] rounded-md bg-transparent h-fit gap-4">
 								<TabsTrigger
 									value="left"
+									title="Left"
 									className="w-10 h-10 p-0 data-[state=active]:bg-muted"
 								>
 									<AlignLeft size={18} />
 								</TabsTrigger>
 								<TabsTrigger
 									value="right"
+									title="Right"
 									className="w-10 h-10 p-0 data-[state=active]:bg-muted"
 								>
 									<AlignRight size={18} />
 								</TabsTrigger>
 								<TabsTrigger
 									value="center"
+									title="Center"
 									className="w-10 h-10 p-0 data-[state=active]:bg-muted"
 								>
 									<AlignCenter size={18} />
 								</TabsTrigger>
 								<TabsTrigger
 									value="justify"
+									title="Justify"
 									className="w-10 h-10 p-0 data-[state=active]:bg-muted "
 								>
 									<AlignJustify size={18} />
@@ -162,10 +244,11 @@ const SettingsTab = (props: Props) => {
 					</div>
 					<div className="flex flex-col gap-2">
 						<p className="text-muted-foreground">Color</p>
-						<Input
-							id="color"
-							onChange={handleOnChanges}
-							value={state.editor.selectedElement.styles.color}
+						<GradientPicker
+							background={state.editor.selectedElement.styles.color ?? ""}
+							setBackground={(color) =>
+								handleGradientPickerChange("color", color)
+							}
 						/>
 					</div>
 					<div className="flex gap-4">
@@ -409,22 +492,14 @@ const SettingsTab = (props: Props) => {
 					</div>
 					<div className="flex flex-col gap-2">
 						<Label className="text-muted-foreground">Background Color</Label>
-						<div className="flex  border-[1px] rounded-md overflow-clip">
-							<div
-								className="w-12 "
-								style={{
-									backgroundColor:
-										state.editor.selectedElement.styles.backgroundColor,
-								}}
-							/>
-							<Input
-								placeholder="#HFI245"
-								className="!border-y-0 rounded-none !border-r-0 mr-2"
-								id="backgroundColor"
-								onChange={handleOnChanges}
-								value={state.editor.selectedElement.styles.backgroundColor}
-							/>
-						</div>
+						<GradientPicker
+							background={
+								state.editor.selectedElement.styles.backgroundColor ?? ""
+							}
+							setBackground={(color) =>
+								handleGradientPickerChange("backgroundColor", color)
+							}
+						/>
 					</div>
 					<div className="flex flex-col gap-2">
 						<Label className="text-muted-foreground">Background Image</Label>

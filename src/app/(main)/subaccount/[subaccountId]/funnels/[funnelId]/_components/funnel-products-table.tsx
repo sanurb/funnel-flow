@@ -1,6 +1,6 @@
 "use client";
-import type React from "react";
-import { useState } from "react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import {
 	Table,
 	TableBody,
@@ -9,16 +9,16 @@ import {
 	TableHeader,
 	TableRow,
 } from "@/components/ui/table";
-import type Stripe from "stripe";
-import Image from "next/image";
 import {
 	saveActivityLogsNotification,
 	updateFunnelProducts,
 } from "@/lib/queries";
 import type { Funnel } from "@prisma/client";
+import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
+import type React from "react";
+import { useState } from "react";
+import type Stripe from "stripe";
 
 interface FunnelProductsTableProps {
 	defaultData: Funnel;

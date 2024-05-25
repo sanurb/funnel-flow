@@ -1,9 +1,4 @@
-import React from "react";
-import { stripe } from "@/lib/stripe";
-import { addOnProducts, pricingCards } from "@/lib/constants";
-import { db } from "@/lib/db";
 import { Separator } from "@/components/ui/separator";
-import PricingCard from "./_components/pricing-card";
 import {
 	Table,
 	TableBody,
@@ -12,7 +7,11 @@ import {
 	TableHeader,
 	TableRow,
 } from "@/components/ui/table";
+import { addOnProducts, pricingCards } from "@/lib/constants";
+import { db } from "@/lib/db";
+import { stripe } from "@/lib/stripe";
 import clsx from "clsx";
+import PricingCard from "./_components/pricing-card";
 import SubscriptionHelper from "./_components/subscription-helper";
 
 type Props = {
