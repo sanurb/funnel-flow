@@ -11,7 +11,7 @@ import {
 } from "@/components/ui/table";
 import { db } from "@/lib/db";
 import type { Contact, SubAccount, Ticket } from "@prisma/client";
-import format from "date-fns/format";
+import { format } from "date-fns/format";
 import CraeteContactButton from "./_components/create-contact-btn";
 
 type Props = {
