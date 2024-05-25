@@ -62,7 +62,6 @@ export const updateBackground: StyleUpdater = (styles, value) => {
 	const isImage = value.startsWith("url");
 	return {
 		...styles,
-		background: value,
 		...(isGradient ? setGradientTextStyles(value) : unsetGradientTextStyles()),
 		...(isImage ? unsetGradientTextStyles() : {}),
 	};
