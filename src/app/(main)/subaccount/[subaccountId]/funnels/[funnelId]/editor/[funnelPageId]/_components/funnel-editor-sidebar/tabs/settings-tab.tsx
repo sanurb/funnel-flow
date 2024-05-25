@@ -211,18 +211,18 @@ const SettingsTab = () => {
 									<AlignLeft size={18} />
 								</TabsTrigger>
 								<TabsTrigger
-									value="right"
-									title="Right"
-									className="w-10 h-10 p-0 data-[state=active]:bg-muted"
-								>
-									<AlignRight size={18} />
-								</TabsTrigger>
-								<TabsTrigger
 									value="center"
 									title="Center"
 									className="w-10 h-10 p-0 data-[state=active]:bg-muted"
 								>
 									<AlignCenter size={18} />
+								</TabsTrigger>
+								<TabsTrigger
+									value="right"
+									title="Right"
+									className="w-10 h-10 p-0 data-[state=active]:bg-muted"
+								>
+									<AlignRight size={18} />
 								</TabsTrigger>
 								<TabsTrigger
 									value="justify"

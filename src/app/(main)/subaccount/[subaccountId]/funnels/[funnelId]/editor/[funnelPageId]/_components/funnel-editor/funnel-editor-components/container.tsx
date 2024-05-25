@@ -3,13 +3,14 @@ import { Badge } from "@/components/ui/badge";
 import { useDebouncedObservable } from "@/hooks/useDebouncedObservable";
 import { type EditorBtns, editorActionType } from "@/lib/constants";
 import {
+	type Editor,
 	type EditorElement,
 	useEditor,
 } from "@/providers/editor/editor-provider";
 import clsx from "clsx";
 import { Trash } from "lucide-react";
 import type React from "react";
-import { memo, useCallback } from "react";
+import { memo, useCallback, useMemo } from "react";
 import { elementFactory } from "../../../utils/elementFactory";
 import Recursive from "./recursive";
 
@@ -46,18 +47,42 @@ const Container = ({ element }: Props) => {
 		[dispatch],
 	);
 
+	/**
+	 * Determines the drop position within a container based on the Y offset.
+	 * This function only handles 'center' and 'bottom' positions.
+	 * The 'top' position is not handled as new components are always added below existing ones.
+	 *
+	 * @param offsetY - The Y offset within the container.
+	 * @param height - The height of the container.
+	 * @param isContainerEmpty - Flag indicating if the container is empty.
+	 * @returns The drop position as 'center' or 'bottom'.
+	 */
 	const getDropPosition = useCallback(
-		(offsetY: number, height: number, isContainerEmpty: boolean) => {
+		(
+			offsetY: number,
+			height: number,
+			isContainerEmpty: boolean,
+		): "center" | "bottom" => {
+			// Define a margin to reduce sensitivity to small changes in the cursor position
+			const MARGIN = height * 0.1;
+			const CENTER_THRESHOLD_START = height / 3;
+			const CENTER_THRESHOLD_END = (height / 3) * 2;
+
+			const isCenter =
+				isContainerEmpty ||
+				(offsetY >= CENTER_THRESHOLD_START - MARGIN &&
+					offsetY <= CENTER_THRESHOLD_END + MARGIN);
+			const isBottom =
+				!isContainerEmpty && offsetY > CENTER_THRESHOLD_END + MARGIN;
+
+			// Mapping positions to boolean checks with adjusted margins
 			const positions: { [key: string]: boolean } = {
-				center:
-					isContainerEmpty ||
-					(offsetY >= height / 3 && offsetY <= (height / 3) * 2),
-				// top: !isContainerEmpty && offsetY < height / 3,
-				bottom: !isContainerEmpty && offsetY > (height / 3) * 2,
+				center: isCenter,
+				bottom: isBottom,
 			};
 
+			// Find and return the position key that is true
 			return Object.keys(positions).find((key) => positions[key]) as
-				| "top"
 				| "center"
 				| "bottom";
 		},
@@ -144,6 +169,47 @@ const Container = ({ element }: Props) => {
 		200,
 	);
 
+	const dropIndicator = useMemo(() => {
+		const renderDropIndicator = (
+			dropPosition: Pick<Editor, "dropPosition">["dropPosition"],
+			isContainerEmpty: boolean,
+		) => {
+			if (dropPosition === "center" && isContainerEmpty) {
+				return (
+					<div
+						className="absolute w-full border-t-4 border-blue-400 transition-opacity duration-200 ease-in-out"
+						style={{
+							left: 0,
+							right: 0,
+						}}
+					/>
+				);
+			}
+			if (dropPosition === "bottom" && !isContainerEmpty) {
+				return (
+					<div
+						className="absolute w-full border-b-4 border-blue-400 transition-opacity duration-200 ease-in-out"
+						style={{
+							bottom: 0,
+							left: 0,
+							right: 0,
+						}}
+					/>
+				);
+			}
+			return null;
+		};
+
+		return state.editor.dropTargetId === id
+			? renderDropIndicator(state.editor.dropPosition, isContainerEmpty)
+			: null;
+	}, [
+		state.editor.dropTargetId,
+		state.editor.dropPosition,
+		id,
+		isContainerEmpty,
+	]);
+
 	return (
 		// biome-ignore lint/a11y/useKeyWithClickEvents: <explanation>
 		<div
@@ -175,39 +241,7 @@ const Container = ({ element }: Props) => {
 			onClick={handleOnClickBody}
 			onDragStart={(e) => handleDragStart(e, "container")}
 		>
-			{state.editor.dropTargetId === id && (
-				<>
-					<div
-						className={clsx(
-							"absolute w-full transition-all duration-200 ease-in-out",
-							{
-								"border-b-4 border-blue-400":
-									state.editor.dropPosition === "bottom" && !isContainerEmpty,
-							},
-						)}
-						style={{
-							bottom:
-								state.editor.dropPosition === "bottom" && !isContainerEmpty
-									? 0
-									: undefined,
-							left: 0,
-							right: 0,
-						}}
-					/>
-					{isContainerEmpty && (
-						<div
-							className="absolute w-full border-t-4 border-blue-400"
-							style={{
-								top: "50%",
-								transform: "translateY(-50%)",
-								left: 0,
-								right: 0,
-							}}
-						/>
-					)}
-				</>
-			)}
-
+			{dropIndicator}
 			<Badge
 				className={clsx(
 					"absolute -top-[23px] -left-[1px] rounded-none rounded-t-lg hidden",
