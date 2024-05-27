@@ -6,8 +6,10 @@ import { NextResponse } from "next/server";
 // See https://clerk.com/docs/references/nextjs/auth-middleware for more information about configuring your Middleware
 export default authMiddleware({
 	publicRoutes: ["/site", "/api/uploadthing"],
-	async beforeAuth(_auth, _req) {},
-	async afterAuth(_auth, req) {
+	// biome-ignore lint/correctness/noUnusedVariables: <explanation>
+	async beforeAuth(auth, req) {},
+	// biome-ignore lint/correctness/noUnusedVariables: <explanation>
+	async afterAuth(auth, req) {
 		//rewrite for domains
 		const url = req.nextUrl;
 		const searchParams = url.searchParams.toString();
@@ -16,6 +18,7 @@ export default authMiddleware({
 		const pathWithSearchParams = `${url.pathname}${
 			searchParams.length > 0 ? `?${searchParams}` : ""
 		}`;
+		console.log("pathWithSearchParams: ", pathWithSearchParams);
 
 		//if subdomain exists
 		const customSubDomain = hostname
