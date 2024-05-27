@@ -6,8 +6,8 @@ import { NextResponse } from "next/server";
 // See https://clerk.com/docs/references/nextjs/auth-middleware for more information about configuring your Middleware
 export default authMiddleware({
 	publicRoutes: ["/site", "/api/uploadthing"],
-	async beforeAuth(auth, req) {},
-	async afterAuth(auth, req) {
+	async beforeAuth(_auth, _req) {},
+	async afterAuth(_auth, req) {
 		//rewrite for domains
 		const url = req.nextUrl;
 		const searchParams = url.searchParams.toString();
@@ -18,19 +18,19 @@ export default authMiddleware({
 		}`;
 
 		//if subdomain exists
-		// const customSubDomain = hostname
-		//   .get('host')
-		//   ?.split(`${process.env.NEXT_PUBLIC_DOMAIN}`)
-		//   .filter(Boolean)[0]
+		const customSubDomain = hostname
+			.get("host")
+			?.split(`${process.env.NEXT_PUBLIC_DOMAIN}`)
+			.filter(Boolean)[0];
 
-		// if (customSubDomain) {
-		//   return NextResponse.rewrite(
-		//     new URL(`/${customSubDomain}${pathWithSearchParams}`, req.url)
-		//   )
-		// }
+		if (customSubDomain) {
+			return NextResponse.rewrite(
+				new URL(`/${customSubDomain}${pathWithSearchParams}`, req.url),
+			);
+		}
 
 		if (url.pathname === "/sign-in" || url.pathname === "/sign-up") {
-			return NextResponse.redirect(new URL(`/agency/sign-in`, req.url));
+			return NextResponse.redirect(new URL("/agency/sign-in", req.url));
 		}
 
 		if (
