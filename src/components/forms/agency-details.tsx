@@ -69,16 +69,16 @@ const AgencyDetails = ({ data }: Props) => {
 		mode: "onChange",
 		resolver: zodResolver(FormSchema),
 		defaultValues: {
-			name: data?.name,
-			companyEmail: data?.companyEmail,
-			companyPhone: data?.companyPhone,
+			name: data?.name || "",
+			companyEmail: data?.companyEmail || "",
+			companyPhone: data?.companyPhone || "",
 			whiteLabel: data?.whiteLabel || false,
-			address: data?.address,
-			city: data?.city,
-			zipCode: data?.zipCode,
-			state: data?.state,
-			country: data?.country,
-			agencyLogo: data?.agencyLogo,
+			address: data?.address || "",
+			city: data?.city || "",
+			zipCode: data?.zipCode || "",
+			state: data?.state || "",
+			country: data?.country || "",
+			agencyLogo: data?.agencyLogo || "",
 		},
 	});
 
@@ -88,19 +88,23 @@ const AgencyDetails = ({ data }: Props) => {
 		if (data) {
 			form.reset(data);
 		}
+	}, [data, form]);
 
-		const fetchCountryData = async () => {
-			try {
-				const response = await fetch("https://get.geojs.io/v1/ip/country.json");
-				const countryData = await response.json();
-				form.setValue("country", countryData.name);
-			} catch (error) {
-				console.error("Failed to fetch country data", error);
-			}
-		};
+	// useEffect(() => {
+	// 	const fetchCountryData = async () => {
+	// 		try {
+	// 			const response = await fetch("https://get.geojs.io/v1/ip/country.json");
+	// 			const countryData = await response.json();
+	// 			setTimeout(() => {
+	// 				form.setValue("country", countryData.name);
+	// 			}, 0);
+	// 		} catch (error) {
+	// 			console.error("Failed to fetch country data", error);
+	// 		}
+	// 	};
 
-		fetchCountryData();
-	}, [form, data]);
+	// 	fetchCountryData();
+	// }, [form]);
 
 	const handleSubmit = async (values: z.infer<typeof FormSchema>) => {
 		try {
