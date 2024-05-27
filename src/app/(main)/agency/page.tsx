@@ -13,12 +13,6 @@ interface ISearchParams {
 	code: string | null;
 }
 
-type UserRole =
-	| "SUBACCOUNT_GUEST"
-	| "SUBACCOUNT_USER"
-	| "AGENCY_OWNER"
-	| "AGENCY_ADMIN";
-
 type RedirectPathResolver = (
 	searchParams: ISearchParams,
 	agencyId: string,
@@ -69,7 +63,7 @@ const Page = async ({
 
 	if (agencyId && user) {
 		const redirectResolver = roleToRedirectPath[user.role];
-		const redirectPath =
+		const redirectPath: string | RedirectPathResolver =
 			typeof redirectResolver === "function"
 				? redirectResolver(searchParams, agencyId)
 				: redirectResolver;
@@ -81,7 +75,6 @@ const Page = async ({
 	}
 
 	const authUser = await currentUser();
-	console.log(`authUser: ${authUser}`);
 	if (!authUser) {
 		return <div>Not authorized</div>;
 	}
