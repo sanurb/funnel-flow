@@ -62,10 +62,7 @@ const Page = async ({
 	const user = await getAuthUserDetails();
 
 	if (agencyId && user) {
-		console.log("agencyId: ", agencyId);
-		console.log("user role: ", user?.role);
 		const redirectResolver = roleToRedirectPath[user.role];
-		console.log("redirectResolver: ", redirectResolver);
 		const redirectPath: string | RedirectPathResolver =
 			typeof redirectResolver === "function"
 				? redirectResolver(searchParams, agencyId)
