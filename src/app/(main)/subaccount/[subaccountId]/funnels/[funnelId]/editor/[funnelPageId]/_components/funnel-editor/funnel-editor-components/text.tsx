@@ -36,6 +36,7 @@ const TextComponent = (props: Props) => {
 
 	//WE ARE NOT ADDING DRAG DROP
 	return (
+		// biome-ignore lint/a11y/useKeyWithClickEvents: <explanation>
 		<div
 			style={styles}
 			className={clsx(
