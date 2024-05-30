@@ -18,7 +18,6 @@ export default authMiddleware({
 		const pathWithSearchParams = `${url.pathname}${
 			searchParams.length > 0 ? `?${searchParams}` : ""
 		}`;
-		console.log("pathWithSearchParams: ", pathWithSearchParams);
 
 		//if subdomain exists
 		const customSubDomain = hostname

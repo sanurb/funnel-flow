@@ -45,14 +45,24 @@ import {
 } from "lucide-react";
 import { updateElementStyles } from "./utils";
 
+type CustomChangeEvent = {
+	target: {
+		id: string;
+		value: string;
+	};
+};
+
+type CombinedChangeEvent =
+	| React.ChangeEvent<HTMLInputElement>
+	| CustomChangeEvent;
+
 const SettingsTab = () => {
 	const { state, dispatch } = useEditor();
 
-	const handleOnChanges = (e: any) => {
-		const styleSettings = e.target.id;
-		const value = e.target.value;
+	const handleOnChanges = (e: CombinedChangeEvent) => {
+		const { id, value } = e.target;
 		const styleObject = {
-			[styleSettings]: value,
+			[id]: value,
 		};
 
 		dispatch({
@@ -69,7 +79,7 @@ const SettingsTab = () => {
 		});
 	};
 
-	const handleChangeCustomValues = (e: any) => {
+	const handleChangeCustomValues = (e: CombinedChangeEvent) => {
 		const settingProperty = e.target.id;
 		const value = e.target.value;
 		const styleObject = {
@@ -237,9 +247,9 @@ const SettingsTab = () => {
 					<div className="flex flex-col gap-2">
 						<p className="text-muted-foreground">Font Family</p>
 						<Input
-							id="DM Sans"
+							id="fontFamily"
 							onChange={handleOnChanges}
-							value={state.editor.selectedElement.styles.fontFamily}
+							value={state.editor.selectedElement.styles.fontFamily || ""}
 						/>
 					</div>
 					<div className="flex flex-col gap-2">
@@ -252,13 +262,13 @@ const SettingsTab = () => {
 						/>
 					</div>
 					<div className="flex gap-4">
-						<div>
+						<div className="flex flex-col gap-2">
 							<Label className="text-muted-foreground">Weight</Label>
 							<Select
 								onValueChange={(e) =>
 									handleOnChanges({
 										target: {
-											id: "font-weight",
+											id: "fontWeight",
 											value: e,
 										},
 									})
@@ -277,13 +287,32 @@ const SettingsTab = () => {
 								</SelectContent>
 							</Select>
 						</div>
-						<div>
-							<Label className="text-muted-foreground">Size</Label>
+						<div className="flex flex-col gap-2">
+							<div className="flex items-center gap-2">
+								<Label className="text-muted-foreground">Size</Label>
+								<TooltipProvider>
+									<Tooltip>
+										<TooltipTrigger asChild>
+											<div>
+												<InfoIcon
+													className="text-muted-foreground transition duration-300 ease-in-out hover:brightness-150"
+													size={16}
+												/>
+											</div>
+										</TooltipTrigger>
+										<TooltipContent align="start" side="left">
+											<div className="p-2 shadow-lg rounded">
+												<p>Specify the unit (e.g., px, em).</p>
+											</div>
+										</TooltipContent>
+									</Tooltip>
+								</TooltipProvider>
+							</div>
 							<Input
-								placeholder="px"
+								placeholder="16px"
 								id="fontSize"
 								onChange={handleOnChanges}
-								value={state.editor.selectedElement.styles.fontSize}
+								value={state.editor.selectedElement.styles.fontSize || ""}
 							/>
 						</div>
 					</div>
