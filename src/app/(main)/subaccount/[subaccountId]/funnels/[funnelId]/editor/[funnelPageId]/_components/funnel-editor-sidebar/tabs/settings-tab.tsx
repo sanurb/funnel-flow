@@ -268,7 +268,7 @@ const SettingsTab = () => {
 								onValueChange={(e) =>
 									handleOnChanges({
 										target: {
-											id: "font-weight",
+											id: "fontWeight",
 											value: e,
 										},
 									})
